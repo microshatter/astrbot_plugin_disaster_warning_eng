@@ -1,6 +1,6 @@
-name: '🎨 设计 / 交互建议'
+name: '🎨 设计 / 交互建议 / Design / UX Suggestions'
 title: '[Design] '
-description: 提交 UI、交互流程或使用体验方面的建议。
+description: 提交 UI、交互流程或使用体验方面的建议。/ Submit suggestions on UI, interaction flow, or user experience.
 labels: [ 'type/design' ]
 body:
   - type: markdown
@@ -8,74 +8,83 @@ body:
       value: |
         感谢您抽出时间提出设计或交互建议！如果您对管理面板、配置流程、信息展示、反馈机制或整体使用体验有改进想法，欢迎通过该模板与我们分享。
 
+        Thank you for taking the time to share design or interaction suggestions! If you have ideas to improve the admin panel, configuration flow, information display, feedback mechanisms, or overall user experience, please share them through this template.
+
   - type: textarea
     attributes:
-      label: 你想改进的设计或交互是什么？
-      description: 请描述当前存在的问题，或你希望优化的体验环节。
+      label: 你想改进的设计或交互是什么？/ What design or interaction do you want to improve?
+      description: 请描述当前存在的问题，或你希望优化的体验环节。/ Please describe the current problem, or the experience you want to optimize.
       placeholder: >
         如: 某个配置流程步骤较多，状态反馈不够明显，用户不容易判断当前是否已经生效。
+        / E.g.: A configuration flow has too many steps, status feedback is not obvious enough, and users can't easily tell whether a change has taken effect.
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 当前体验中的问题
-      description: 请说明当前设计让你感到困惑、不顺畅或效率较低的地方。
+      label: 当前体验中的问题 / Problems in the current experience
+      description: 请说明当前设计让你感到困惑、不顺畅或效率较低的地方。/ Please explain where the current design feels confusing, awkward, or inefficient.
       placeholder: >
         如: 用户需要频繁切换页面才能完成配置；错误提示过于简短；成功状态缺少明确反馈。
+        / E.g.: Users must switch pages frequently to complete configuration; error messages are too brief; success states lack clear feedback.
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 建议的改进方案
-      description: 请描述你的改进思路。可以是文字说明、流程建议、信息层级调整，或交互草案。
+      label: 建议的改进方案 / Suggested improvement
+      description: 请描述你的改进思路。可以是文字说明、流程建议、信息层级调整，或交互草案。/ Please describe your improvement ideas. It can be written descriptions, flow suggestions, information hierarchy adjustments, or interaction drafts.
       placeholder: >
         如: 将相关配置集中展示，增加分组标题、状态提示和默认示例，减少首次使用的理解成本。
+        / E.g.: Group related settings together, add section titles, status hints, and default examples to reduce the learning cost for first-time users.
     validations:
       required: true
 
   - type: dropdown
     attributes:
-      label: 建议主要涉及哪一类设计问题？
-      description: 请选择最接近的一项。
+      label: 建议主要涉及哪一类设计问题？/ Which type of design issue does this mainly involve?
+      description: 请选择最接近的一项。/ Please select the closest option.
       multiple: false
       options:
-        - '管理面板 UI 布局'
-        - '配置流程与交互逻辑'
-        - '提示文案与状态反馈'
-        - '信息展示与可读性'
-        - '移动端或小屏适配体验'
-        - '其他'
+        - '管理面板 UI 布局 / Admin panel UI layout'
+        - '配置流程与交互逻辑 / Configuration flow and interaction logic'
+        - '提示文案与状态反馈 / Prompt copy and status feedback'
+        - '信息展示与可读性 / Information display and readability'
+        - '移动端或小屏适配体验 / Mobile or small-screen adaptation experience'
+        - '其他 / Other'
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 使用场景
-      description: 请描述该设计建议最常出现在哪类使用场景中。
+      label: 使用场景 / Use case
+      description: 请描述该设计建议最常出现在哪类使用场景中。/ Please describe in which use cases this design suggestion most commonly applies.
       placeholder: >
         如: 初次安装插件时、调整配置时、查看运行状态时、排查异常时等。
+        / E.g.: When first installing the plugin, adjusting configuration, viewing runtime status, or troubleshooting issues, etc.
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 参考资料（可选）
+      label: 参考资料（可选）/ Reference materials (optional)
       description: >
         如原型图、截图、示意图、竞品案例或你整理的流程说明，都可以附在这里。
+        / Prototypes, screenshots, diagrams, competitor cases, or your own flow descriptions can all be attached here.
       placeholder: >
         可粘贴截图链接、原型说明、参考界面或其他辅助材料。
+        / You can paste screenshot links, prototype notes, reference interfaces, or other supporting materials.
     validations:
       required: false
 
   - type: checkboxes
     attributes:
-      label: 你愿意参与后续设计讨论或提交 PR 吗？
+      label: 你愿意参与后续设计讨论或提交 PR 吗？/ Would you like to participate in follow-up design discussions or submit a PR?
       description: >
         这不是必须的，但如果你愿意继续参与，我们会非常欢迎。
+        / This is not required, but we would greatly welcome your continued participation.
       options:
-        - label: 是的，我愿意继续参与设计讨论或提交 PR!
+        - label: 是的，我愿意继续参与设计讨论或提交 PR! / Yes, I would like to continue participating in design discussions or submit a PR!
 
   - type: checkboxes
     attributes:
@@ -83,8 +92,9 @@ body:
       options:
         - label: >
             我已阅读并同意遵守该项目的 [行为准则](https://docs.github.com/zh/site-policy/github-terms/github-community-code-of-conduct)。
+            / I have read and agree to abide by the [Code of Conduct](https://docs.github.com/site-policy/github-terms/github-community-code-of-conduct) of this project.
           required: true
 
   - type: markdown
     attributes:
-      value: "感谢您填写我们的表单！"
+      value: '感谢您填写我们的表单！/ Thank you for filling out our form!'

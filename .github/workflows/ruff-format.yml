@@ -1,4 +1,4 @@
-name: 🐍 代码格式与质量检查
+name: 🐍 Code Format & Quality Check
 
 on:
   push:
@@ -8,27 +8,27 @@ on:
 
 jobs:
   ruff-check:
-    name: Ruff 代码检查
+    name: Ruff Check
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
 
     steps:
-      - name: 检出代码
+      - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: 设置 Python 环境
+      - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.10'
 
-      - name: 安装 uv
+      - name: Install uv
         run: pip install uv
 
-      - name: 执行 Ruff 格式化与修复
+      - name: Run Ruff format and fix
         id: ruff
-        # 使用 || true 确保即使有错误也不立即中断，以便后续步骤生成报告
+        # Use || true so that errors do not abort immediately; the report is generated in a later step.
         run: |
           echo "Using ruff version..."
           uvx ruff==0.14.2 --version
@@ -36,112 +36,112 @@ jobs:
           echo "Running ruff format..."
           FORMAT_LOG=$(uvx ruff==0.14.2 format . 2>&1 || true)
           echo "$FORMAT_LOG"
-          
+
           echo "Running ruff check --fix..."
           CHECK_LOG=$(uvx ruff==0.14.2 check --fix . 2>&1 || true)
           echo "$CHECK_LOG"
-          
-          # 将日志保存到文件供后续脚本读取
+
+          # Save the logs to files for the later script to read
           echo "$FORMAT_LOG" > format.log
           echo "$CHECK_LOG" > check.log
 
-      - name: 生成报告与评论
+      - name: Generate report and comment
         uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
-            
+
             const formatLog = fs.readFileSync('format.log', 'utf8');
             const checkLog = fs.readFileSync('check.log', 'utf8');
-            
-            // --- 解析格式化日志 ---
-            // 示例: "1 file reformatted, 2 files left unchanged."
+
+            // --- Parse the format log ---
+            // Example: "1 file reformatted, 2 files left unchanged."
             const formatMatch = formatLog.match(/(\d+) file(s)? reformatted/);
             const reformattedCount = formatMatch ? parseInt(formatMatch[1]) : 0;
-            
+
             const unchangedMatch = formatLog.match(/(\d+) file(s)? left unchanged/);
             const unchangedCount = unchangedMatch ? parseInt(unchangedMatch[1]) : 0;
-            
-            // --- 解析检查日志 ---
-            // 示例: "Found 2 errors (1 fixed, 1 remaining)."
+
+            // --- Parse the check log ---
+            // Example: "Found 2 errors (1 fixed, 1 remaining)."
             let fixedCount = 0;
             let remainingCount = 0;
             let totalErrors = 0;
-            
+
             const errorMatch = checkLog.match(/Found (\d+) error/);
             if (errorMatch) {
                 totalErrors = parseInt(errorMatch[1]);
-                
+
                 const fixedMatch = checkLog.match(/\((\d+) fixed/);
                 if (fixedMatch) fixedCount = parseInt(fixedMatch[1]);
-                
+
                 const remainingMatch = checkLog.match(/, (\d+) remaining\)/);
                 if (remainingMatch) {
                     remainingCount = parseInt(remainingMatch[1]);
                 } else {
-                    // 如果没有详细的 fixed/remaining 信息，通常意味着没有修复或全部剩余
+                    // If there is no detailed fixed/remaining info, it usually means nothing was fixed or all errors remain
                     if (fixedCount === 0) remainingCount = totalErrors;
                 }
             }
-            
-            // --- 构建报告内容 ---
+
+            // --- Build the report ---
             let summary = '';
             let isSuccess = (reformattedCount === 0 && remainingCount === 0);
-            
+
             if (isSuccess) {
                 summary = '### ✅ All checked pass!';
             } else {
-                summary = '### ⚠️ 代码质量检查报告\n\n';
-                summary += '> 发现部分文件需要格式化或存在代码问题，建议在本地运行 `ruff format .` 和 `ruff check --fix .`。\n\n';
-                
-                // 格式化部分
+                summary = '### ⚠️ Code Quality Check Report\n\n';
+                summary += '> Some files need formatting or contain code issues. It is recommended to run `ruff format .` and `ruff check --fix .` locally.\n\n';
+
+                // Formatting section
                 if (reformattedCount > 0) {
-                    summary += `**🖌️ 格式化**: \`${reformattedCount}\` 个文件被重新格式化 (未变更: ${unchangedCount})\n`;
+                    summary += `**🖌️ Formatting**: \`${reformattedCount}\` file(s) reformatted (unchanged: ${unchangedCount})\n`;
                 } else {
-                    summary += `**🖌️ 格式化**: ✅ 无需变更\n`;
+                    summary += `**🖌️ Formatting**: ✅ No changes needed\n`;
                 }
-                
-                // 代码检查部分
+
+                // Check section
                 if (totalErrors > 0) {
-                    summary += `**🛡️ 代码检查**: 发现 \`${totalErrors}\` 个问题\n`;
-                    summary += `- 🛠️ 已自动修复: \`${fixedCount}\`\n`;
-                    summary += `- ❌ 剩余未修复: \`${remainingCount}\`\n`;
+                    summary += `**🛡️ Check**: found \`${totalErrors}\` issue(s)\n`;
+                    summary += `- 🛠️ Auto-fixed: \`${fixedCount}\`\n`;
+                    summary += `- ❌ Remaining: \`${remainingCount}\`\n`;
                 } else {
-                    summary += `**🛡️ 代码检查**: ✅ 通过\n`;
+                    summary += `**🛡️ Check**: ✅ Passed\n`;
                 }
-                
-                // 错误详情 (如果有剩余错误)
+
+                // Error details (if any remaining)
                 if (remainingCount > 0) {
-                    // 截取部分日志以防过长
-                    const logPreview = checkLog.length > 2000 ? checkLog.substring(0, 2000) + '\n... (日志过长已截断)' : checkLog;
-                    summary += `\n<details><summary>🔍 错误详情</summary>\n\n\`\`\`text${logPreview}\n\n\`\`\`\n</details>`;
+                    // Truncate the log if it is too long
+                    const logPreview = checkLog.length > 2000 ? checkLog.substring(0, 2000) + '\n... (log truncated)' : checkLog;
+                    summary += `\n<details><summary>🔍 Error details</summary>\n\n\`\`\`text${logPreview}\n\n\`\`\`\n</details>`;
                 }
             }
-            
-            // --- 输出到 Job Summary ---
+
+            // --- Write to the Job Summary ---
             await core.summary.addRaw(summary).write();
-            
-            // --- PR 评论 (仅在 PR 事件触发时) ---
+
+            // --- PR comment (only when triggered by a PR event) ---
             if (context.eventName === 'pull_request') {
                 const issue_number = context.issue.number;
                 const owner = context.repo.owner;
                 const repo = context.repo.repo;
-                
-                // 获取现有评论
+
+                // Get existing comments
                 const comments = await github.rest.issues.listComments({
                     owner,
                     repo,
                     issue_number,
                 });
-                
-                // 查找机器人之前发的 Ruff 报告评论
+
+                // Find the bot's previous Ruff report comment
                 const botComment = comments.data.find(comment =>
                     comment.user.type === 'Bot' &&
-                    (comment.body.includes('代码质量检查报告') || comment.body.includes('All checked pass'))
+                    (comment.body.includes('Code Quality Check Report') || comment.body.includes('All checked pass'))
                 );
-                
+
                 if (botComment) {
-                    // 如果已有评论，更新它
+                    // If a comment already exists, update it
                     await github.rest.issues.updateComment({
                         owner,
                         repo,
@@ -149,9 +149,9 @@ jobs:
                         body: summary
                     });
                 } else {
-                    // 如果没有，且检查未通过，则创建新评论
-                    // (如果通过了且之前没评论，就不发了，保持清爽；除非你想让用户知道通过了)
-                    // 这里逻辑：如果有问题 -> 发/更；如果没问题 -> 只有在之前有过报错评论时才更新为通过，否则不打扰。
+                    // If none exists and the check failed, create a new comment
+                    // (If it passed and there was no previous comment, do nothing to keep things clean; unless you want users to know it passed)
+                    // Logic: if there are issues -> post/update; if OK -> only update when a previous failure comment exists, otherwise do not bother.
                     if (!isSuccess) {
                         await github.rest.issues.createComment({
                             owner,
@@ -162,8 +162,8 @@ jobs:
                     }
                 }
             }
-            
-            // --- 设置 Job 状态 ---
+
+            // --- Set job status ---
             if (!isSuccess) {
-                core.setFailed('代码格式或质量检测未通过，请检查报告。');
+                core.setFailed('Code format or quality check failed, please review the report.');
             }
