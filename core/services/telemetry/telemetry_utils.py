@@ -49,4 +49,4 @@ async def track_error_safely(
         return False
 
 
-__all__ = ["track_feature_safely", "track_error_safely"]
+__all__ = ["track_error_safely", "track_feature_safely"]

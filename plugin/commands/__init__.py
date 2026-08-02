@@ -8,7 +8,7 @@ from .plugin_query_command_service import PluginQueryCommandService
 from .telemetry_mixin import CommandTelemetryMixin
 
 __all__ = [
+    "CommandTelemetryMixin",
     "PluginAdminCommandService",
     "PluginQueryCommandService",
-    "CommandTelemetryMixin",
 ]

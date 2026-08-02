@@ -9,9 +9,8 @@ import os
 import time
 from typing import Any
 
-from jinja2 import Template
-
 from astrbot.api import logger
+from jinja2 import Template
 
 from ....utils.map_tile_sources import get_tile_url_js
 

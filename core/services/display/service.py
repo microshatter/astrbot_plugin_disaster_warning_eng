@@ -210,16 +210,16 @@ def build_admin_statistics_projection(
 
 __all__ = [
     "EarthquakeDisplayContext",
-    "TsunamiDisplayContext",
-    "WeatherDisplayContext",
     "EarthquakeDisplayModel",
+    "TsunamiDisplayContext",
     "TsunamiDisplayModel",
+    "WeatherDisplayContext",
     "WeatherDisplayModel",
+    "build_admin_statistics_projection",
     "build_display_context",
+    "build_earthquake_summary_view",
+    "build_earthquake_views_from_stats",
     "build_event_summary_view",
     "build_event_summary_views",
-    "build_earthquake_summary_view",
     "build_recent_earthquake_views",
-    "build_earthquake_views_from_stats",
-    "build_admin_statistics_projection",
 ]

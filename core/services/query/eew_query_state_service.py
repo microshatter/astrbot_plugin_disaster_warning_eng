@@ -119,12 +119,15 @@ class EEWQueryStateService:
 
         # 核实两项预警是否属于同一条更新链
         if (
-            current_event_id
-            and candidate_event_id
-            and current_event_id == candidate_event_id
+            (
+                current_event_id
+                and candidate_event_id
+                and current_event_id == candidate_event_id
+            )
+            or current_fp
+            and candidate_fp
+            and current_fp == candidate_fp
         ):
-            same_chain = True
-        elif current_fp and candidate_fp and current_fp == candidate_fp:
             same_chain = True
 
         current_updates = self._safe_int(current.get("updates", 1), default=1)

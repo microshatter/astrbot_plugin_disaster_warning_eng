@@ -187,7 +187,7 @@ class BackupService:
                         await db_mgr.initialize()
                     except Exception as init_err:
                         logger.error(f"[灾害预警] 恢复数据库连接失败: {init_err}")
-                return False, f"创建本地回滚备份失败，已中止还原: {str(e)}"
+                return False, f"创建本地回滚备份失败，已中止还原: {e!s}"
 
             # 解压还原新文件
             logger.info("[灾害预警] 开始解压并替换选中的本地数据文件...")
@@ -210,7 +210,7 @@ class BackupService:
                             os.replace(str(bak_path), str(path))
                         except Exception:
                             pass
-                return False, f"解压还原数据时出错，已回滚: {str(e)}"
+                return False, f"解压还原数据时出错，已回滚: {e!s}"
             finally:
                 # 无论成功失败，都尝试清掉 .bak 缓存文件
                 for _, bak_path in temp_backups:
@@ -237,7 +237,7 @@ class BackupService:
                     and self.disaster_service
                     and hasattr(self.disaster_service, "session_config_manager")
                 ):
-                    sess_mgr = getattr(self.disaster_service, "session_config_manager")
+                    sess_mgr = self.disaster_service.session_config_manager
                     if sess_mgr:
                         logger.info("[灾害预警] 正在重新装载会话覆写差异...")
                         sess_mgr._load()
@@ -246,7 +246,7 @@ class BackupService:
             return True, "数据还原成功！"
         except Exception as e:
             logger.error(f"[灾害预警] 导入备份发生未知异常: {e}")
-            return False, f"导入备份失败: {str(e)}"
+            return False, f"导入备份失败: {e!s}"
 
     def export_session_overrides(self) -> dict:
         """
@@ -282,7 +282,7 @@ class BackupService:
             if self.disaster_service and hasattr(
                 self.disaster_service, "session_config_manager"
             ):
-                sess_mgr = getattr(self.disaster_service, "session_config_manager")
+                sess_mgr = self.disaster_service.session_config_manager
 
             if not sess_mgr:
                 logger.error(
@@ -326,4 +326,4 @@ class BackupService:
             return True, f"成功导入 {len(cleaned_overrides)} 个会话配置差异！"
         except Exception as e:
             logger.error(f"[灾害预警] 导入会话差异配置发生异常: {e}")
-            return False, f"导入会话配置失败: {str(e)}"
+            return False, f"导入会话配置失败: {e!s}"

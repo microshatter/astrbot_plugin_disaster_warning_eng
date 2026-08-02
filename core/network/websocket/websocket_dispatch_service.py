@@ -10,7 +10,6 @@ import traceback
 from typing import Any
 
 from aiohttp import ClientWebSocketResponse, WSMsgType
-
 from astrbot.api import logger
 
 

@@ -140,4 +140,4 @@ class MessageReadableLogService:
                 return self.logger._format_json_data(parsed_binary, indent=2)
             return self.format_binary_data(payload_data, indent=2)
 
-        return f"  {str(payload_data)}\n"
+        return f"  {payload_data!s}\n"

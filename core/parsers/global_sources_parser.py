@@ -522,13 +522,15 @@ class UsgsEarthquakeParser(BaseParser):
             required_fields = ["id", "magnitude", "latitude", "longitude", "shockTime"]
             missing_fields = []
             for field in required_fields:
-                if field not in msg_data and field.capitalize() not in msg_data:
-                    missing_fields.append(field)
-                elif field in msg_data and msg_data[field] is None:
-                    missing_fields.append(field)
-                elif (
-                    field.capitalize() in msg_data
-                    and msg_data[field.capitalize()] is None
+                if (
+                    field not in msg_data
+                    and field.capitalize() not in msg_data
+                    or field in msg_data
+                    and msg_data[field] is None
+                    or (
+                        field.capitalize() in msg_data
+                        and msg_data[field.capitalize()] is None
+                    )
                 ):
                     missing_fields.append(field)
             if missing_fields:

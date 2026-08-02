@@ -6,10 +6,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from astrbot.api import logger
 from fastapi import File, Query, UploadFile
 from fastapi.responses import StreamingResponse
-
-from astrbot.api import logger
 
 from ....storage.backup_manager import BackupService
 from ..payloads.api_response import ApiResponse
@@ -40,7 +39,7 @@ def register_backup_routes(app, *, disaster_service):
             )
         except Exception as e:
             logger.error(f"[灾害预警] 导出备份失败: {e}")
-            return ApiResponse.error(f"导出备份失败: {str(e)}", status_code=500)
+            return ApiResponse.error(f"导出备份失败: {e!s}", status_code=500)
 
     @app.post("/api/backup/import")
     async def import_backup(file: UploadFile = File(...)):
@@ -53,7 +52,7 @@ def register_backup_routes(app, *, disaster_service):
             return ApiResponse.error(msg, status_code=400)
         except Exception as e:
             logger.error(f"[灾害预警] 导入全量备份失败: {e}")
-            return ApiResponse.error(f"导入备份失败: {str(e)}", status_code=500)
+            return ApiResponse.error(f"导入备份失败: {e!s}", status_code=500)
 
     @app.get("/api/backup/session-overrides")
     async def export_session_overrides():
@@ -63,7 +62,7 @@ def register_backup_routes(app, *, disaster_service):
             return ApiResponse.success(data)
         except Exception as e:
             logger.error(f"[灾害预警] 导出会话差异配置失败: {e}")
-            return ApiResponse.error(f"导出会话差异配置失败: {str(e)}", status_code=500)
+            return ApiResponse.error(f"导出会话差异配置失败: {e!s}", status_code=500)
 
     @app.post("/api/backup/session-overrides")
     async def import_session_overrides(
@@ -78,4 +77,4 @@ def register_backup_routes(app, *, disaster_service):
             return ApiResponse.error(msg, status_code=400)
         except Exception as e:
             logger.error(f"[灾害预警] 导入会话差异配置失败: {e}")
-            return ApiResponse.error(f"导入会话差异配置失败: {str(e)}", status_code=500)
+            return ApiResponse.error(f"导入会话差异配置失败: {e!s}", status_code=500)

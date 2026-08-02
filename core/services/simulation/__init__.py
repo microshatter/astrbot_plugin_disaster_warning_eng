@@ -14,7 +14,7 @@ from .simulation_service import (
 __all__ = [
     "SimulationBuildResult",
     "SimulationParamsDefaults",
+    "build_earthquake_simulation",
     "get_simulation_params",
     "resolve_target_session",
-    "build_earthquake_simulation",
 ]

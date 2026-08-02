@@ -9,7 +9,6 @@ import re
 import time
 
 import aiohttp
-
 from astrbot.api import logger
 
 # 中国 34 个省级行政区划简称与全名关键字定义列表

@@ -42,7 +42,7 @@ class ScaleConverter:
     }
 
     @staticmethod
-    def parse_jma_cwa_scale(scale_str: str | int | float) -> float | None:
+    def parse_jma_cwa_scale(scale_str: str | float) -> float | None:
         """
         解析日本或台湾震度字符串。
         支持格式：'5-'、'5+'、'5弱'、'5強'、'5'、'6.5' 等。
@@ -188,7 +188,7 @@ class ScaleConverter:
         return "⚪"
 
     @staticmethod
-    def format_jma_cwa_scale_display(scale_value: str | int | float | None) -> str:
+    def format_jma_cwa_scale_display(scale_value: str | float | None) -> str:
         """
         将日本/台湾震度值转换为展示文本。
 

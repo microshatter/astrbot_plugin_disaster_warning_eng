@@ -221,13 +221,13 @@ def prepare_display_projection(event: EventEnvelope, source_id: str) -> dict[str
 
 
 __all__ = [
-    "normalize_display_text",
-    "first_non_empty",
-    "coerce_dict",
-    "build_projection_view",
-    "normalize_projection_metadata",
-    "resolve_projection_source_id",
     "build_projection_payload",
-    "resolve_projection_title",
+    "build_projection_view",
+    "coerce_dict",
+    "first_non_empty",
+    "normalize_display_text",
+    "normalize_projection_metadata",
     "prepare_display_projection",
+    "resolve_projection_source_id",
+    "resolve_projection_title",
 ]

@@ -9,8 +9,8 @@ from .source_runtime_query_service import SourceRuntimeQueryService
 from .weather_query_service import query_weather_alarm_data
 
 __all__ = [
-    "EarthquakeListService",
     "EEWQueryStateService",
+    "EarthquakeListService",
     "SourceRuntimeQueryService",
     "query_weather_alarm_data",
 ]

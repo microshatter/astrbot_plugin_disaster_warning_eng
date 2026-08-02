@@ -112,4 +112,4 @@ class IntensityService:
 
 IntensityCalculator = IntensityService
 
-__all__ = ["IntensityService", "IntensityCalculator"]
+__all__ = ["IntensityCalculator", "IntensityService"]

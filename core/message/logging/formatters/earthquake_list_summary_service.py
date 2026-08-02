@@ -66,7 +66,7 @@ class EarthquakeListSummaryService:
 
         if isinstance(earthquake_list, dict):
             # Wolfx 列表按 No1/No2... 编号，摘要模式下按序抽取前 max_items 条作为样本。
-            no_keys = [key for key in earthquake_list.keys() if key.startswith("No")]
+            no_keys = [key for key in earthquake_list if key.startswith("No")]
             total_count = len(no_keys)
             sorted_keys = sorted(
                 no_keys,

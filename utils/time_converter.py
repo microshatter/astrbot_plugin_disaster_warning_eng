@@ -35,7 +35,7 @@ class TimeConverter:
 
     @staticmethod
     def parse_datetime(
-        time_input: str | int | float | datetime | None,
+        time_input: str | float | datetime | None,
     ) -> datetime | None:
         """
         解析各种格式的时间输入为 datetime 对象

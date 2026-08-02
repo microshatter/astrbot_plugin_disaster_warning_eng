@@ -8,9 +8,8 @@ from __future__ import annotations
 import os
 import time
 
-from jinja2 import Template
-
 from astrbot.api import logger
+from jinja2 import Template
 
 from ....utils.version import get_plugin_version
 

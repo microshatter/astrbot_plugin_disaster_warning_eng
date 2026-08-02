@@ -255,7 +255,7 @@ class SourceMessageRouter:
                 except json.JSONDecodeError as error:
                     # 避免非 JSON 报文引起程序崩溃
                     plugin_logger.error(f"[灾害预警] JSON解析失败: {error}")
-                    return None
+                    return
 
                 # 先校验路由映射，再把一条总线消息拆成多个候选数据源消息
                 self._ensure_fan_studio_parser_mapping()
@@ -305,7 +305,7 @@ class SourceMessageRouter:
                                 f"[灾害预警] 收到一条尚未处理的消息，连接为 {connection_name}，消息类型为 {msg_type}，来源为 {data.get('source', 'unknown')}，数据摘要：{str(data)[:100]}"
                             )
 
-                return None
+                return
 
             except Exception as error:
                 connection_uri = (
@@ -396,12 +396,12 @@ class SourceMessageRouter:
                     data = json.loads(message)
                 except json.JSONDecodeError as error:
                     plugin_logger.error(f"[灾害预警] Wolfx JSON解析失败: {error}")
-                    return None
+                    return
 
                 msg_type = data.get("type")
                 # 心跳直接跳过不作处理
                 if msg_type in ["heartbeat", "pong"]:
-                    return None
+                    return
 
                 # 获取 Wolfx 当前子报文类型对应的系统内 source_id
                 source_id = get_wolfx_source_id(msg_type)
@@ -409,10 +409,10 @@ class SourceMessageRouter:
                     plugin_logger.debug(
                         f"[灾害预警] Wolfx 消息类型 {msg_type} 暂未识别，来源连接为 {connection_name}"
                     )
-                    return None
+                    return
 
                 if not self._is_source_routable(source_id, msg_type):
-                    return None
+                    return
 
                 plugin_logger.debug(
                     f"[灾害预警] 将使用 Wolfx 解析器 {source_id} 处理类型为 {msg_type} 的消息"
@@ -435,7 +435,7 @@ class SourceMessageRouter:
                     source_channel=msg_type,
                     parser_log_label=source_id,
                 )
-                return None
+                return
 
             except Exception as error:
                 connection_uri = (
@@ -450,7 +450,7 @@ class SourceMessageRouter:
                     error,
                     module="core.source_message_router.wolfx_handler",
                 )
-                return None
+                return
 
         return wolfx_handler
 

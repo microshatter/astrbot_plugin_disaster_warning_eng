@@ -273,8 +273,8 @@ class FusionStateStore:
 
         if normalized_type == "unknown" and fallback_candidates:
             fallback_candidates.sort(
-                key=lambda item: -FusionStateStore._normalize_created_at(
-                    item[1].get("created_at")
+                key=lambda item: (
+                    -FusionStateStore._normalize_created_at(item[1].get("created_at"))
                 )
             )
             return fallback_candidates[0][1]

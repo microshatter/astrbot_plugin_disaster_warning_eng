@@ -251,7 +251,7 @@ class MessageJsonFormatterService:
             return f"{value[:47]}..." if len(value) > 50 else value
         return str(value)
 
-    def _format_numeric_value(self, key: str, value: int | float) -> str:
+    def _format_numeric_value(self, key: str, value: float) -> str:
         """按字段语义格式化数值类型。"""
         if key == "maxScale" and isinstance(value, int):
             return f"{value} ({self._MAX_SCALE_MAP.get(value, '未知')})"

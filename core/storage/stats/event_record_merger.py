@@ -85,11 +85,14 @@ class EventRecordMerger:
 
             rec_unique_id = record.get("unique_id")
             is_match = False
-            if rec_real_id and rec_real_id == real_event_id:
-                is_match = True
-            elif not rec_real_id and rec_legacy_id == real_event_id:
-                is_match = True
-            elif rec_unique_id and rec_unique_id == event_unique_id:
+            if (
+                rec_real_id
+                and rec_real_id == real_event_id
+                or not rec_real_id
+                and rec_legacy_id == real_event_id
+                or rec_unique_id
+                and rec_unique_id == event_unique_id
+            ):
                 is_match = True
 
             if not is_match:

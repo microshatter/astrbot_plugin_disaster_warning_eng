@@ -74,15 +74,17 @@ class StatsRuleService:
                 if "正式" in info_type:
                     is_reliable = True
                     is_cenc_official = True
-                elif "reviewed" in info_lower:
-                    is_reliable = True
-                elif info_type in [
-                    "Destination",
-                    "ScaleAndDestination",
-                    "DetailScale",
-                ]:
-                    is_reliable = True
-                elif "震源" in info_type or "各地" in info_type:
+                elif (
+                    "reviewed" in info_lower
+                    or info_type
+                    in [
+                        "Destination",
+                        "ScaleAndDestination",
+                        "DetailScale",
+                    ]
+                    or "震源" in info_type
+                    or "各地" in info_type
+                ):
                     is_reliable = True
 
             if is_reliable:

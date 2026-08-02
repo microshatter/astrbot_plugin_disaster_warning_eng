@@ -9,7 +9,7 @@ from .web_server import WebAdminServer
 from .web_server_runtime_service import WebServerRuntimeService
 
 __all__ = [
-    "is_running_in_docker",
     "WebAdminServer",
     "WebServerRuntimeService",
+    "is_running_in_docker",
 ]

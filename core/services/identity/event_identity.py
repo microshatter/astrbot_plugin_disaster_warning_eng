@@ -292,13 +292,13 @@ resolve_event_unique_key = _event_identity_service.resolve_event_unique_key
 
 __all__ = [
     "EventIdentityService",
-    "resolve_source_id",
-    "resolve_report_num",
-    "infer_source_timezone",
     "ensure_aware_datetime",
     "ensure_utc_datetime",
+    "infer_source_timezone",
+    "resolve_event_publish_time_utc",
     "resolve_event_time_aware",
     "resolve_event_time_utc",
-    "resolve_event_publish_time_utc",
     "resolve_event_unique_key",
+    "resolve_report_num",
+    "resolve_source_id",
 ]

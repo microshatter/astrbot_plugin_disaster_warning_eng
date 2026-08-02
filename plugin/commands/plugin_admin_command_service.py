@@ -93,7 +93,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
                 {"success": False},
             )
             logger.error(f"[灾害预警] 重连操作失败: {e}")
-            yield event.plain_result(f"❌ 重连操作失败: {str(e)}")
+            yield event.plain_result(f"❌ 重连操作失败: {e!s}")
 
     async def handle_disaster_status(self, event):
         """处理运行状态查询命令，以合并转发多节点消息形式展示各个连接状态与子数据源情况。"""
@@ -281,9 +281,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             yield quoted_plain_result(self.plugin, event, "\n".join(overview_lines))
         except Exception as e:
             logger.error(f"[灾害预警] 获取服务状态失败: {e}")
-            yield quoted_plain_result(
-                self.plugin, event, f"❌ 获取服务状态失败: {str(e)}"
-            )
+            yield quoted_plain_result(self.plugin, event, f"❌ 获取服务状态失败: {e!s}")
 
     async def handle_disaster_stats(self, event):
         """处理统计详情命令，聚合展示本地内存中的去重与过滤指标。"""
@@ -323,7 +321,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             yield _quoted_plain_result(stats_summary)
         except Exception as e:
             logger.error(f"[灾害预警] 获取统计信息失败: {e}")
-            yield _quoted_plain_result(f"❌ 获取统计信息失败: {str(e)}")
+            yield _quoted_plain_result(f"❌ 获取统计信息失败: {e!s}")
 
     async def handle_disaster_logs(self, event):
         """查看原始日志记录文件的体积、条目数与起止时间（需管理员权限）。"""
@@ -382,7 +380,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             yield event.plain_result(log_info)
         except Exception as e:
             logger.error(f"[灾害预警] 获取日志信息失败: {e}")
-            yield event.plain_result(f"❌ 获取日志信息失败: {str(e)}")
+            yield event.plain_result(f"❌ 获取日志信息失败: {e!s}")
 
     async def handle_toggle_message_logging(self, event):
         """开启或关闭原始 WebSocket 日志记录器，切换运行配置。"""
@@ -415,7 +413,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             )
         except Exception as e:
             logger.error(f"[灾害预警] 切换日志状态失败: {e}")
-            yield event.plain_result(f"❌ 切换日志状态失败: {str(e)}")
+            yield event.plain_result(f"❌ 切换日志状态失败: {e!s}")
 
     async def handle_clear_message_logs(self, event):
         """清空本地生成的原始 JSON 消息日志文件。"""
@@ -437,7 +435,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             )
         except Exception as e:
             logger.error(f"[灾害预警] 清除日志失败: {e}")
-            yield event.plain_result(f"❌ 清除日志失败: {str(e)}")
+            yield event.plain_result(f"❌ 清除日志失败: {e!s}")
 
     async def handle_clear_statistics(self, event):
         """重置本地 SQLite 数据库与统计 JSON 快照（需管理员权限）。"""
@@ -463,7 +461,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             )
         except Exception as e:
             logger.error(f"[灾害预警] 清除统计失败: {e}")
-            yield event.plain_result(f"❌ 清除统计失败: {str(e)}")
+            yield event.plain_result(f"❌ 清除统计失败: {e!s}")
 
     async def handle_toggle_push(self, event):
         """快速切换当前会话的推送名单启用状态。"""
@@ -510,7 +508,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
                 logger.info(f"[灾害预警] {session_log_str} 已开启推送")
         except Exception as e:
             logger.error(f"[灾害预警] 切换推送状态失败: {e}")
-            yield event.plain_result(f"❌ 切换推送状态失败: {str(e)}")
+            yield event.plain_result(f"❌ 切换推送状态失败: {e!s}")
 
     async def handle_disaster_config(
         self, event, action: str = None, target: str = None
@@ -588,4 +586,4 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             )
         except Exception as e:
             logger.error(f"[灾害预警] 获取配置详情失败: {e}")
-            yield event.plain_result(f"❌ 获取配置详情失败: {str(e)}")
+            yield event.plain_result(f"❌ 获取配置详情失败: {e!s}")

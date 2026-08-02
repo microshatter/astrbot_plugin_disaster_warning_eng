@@ -8,7 +8,6 @@ import mimetypes
 
 import aiohttp
 from aiohttp import ClientSession
-
 from astrbot.api import logger
 
 

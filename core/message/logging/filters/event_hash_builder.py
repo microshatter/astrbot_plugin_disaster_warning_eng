@@ -94,7 +94,7 @@ class EventHashBuilder:
             if not report_num:
                 updated = data.get("updated") or data.get("updateTime")
                 if updated:
-                    hash_parts.append(f"up:{str(updated)}")
+                    hash_parts.append(f"up:{updated!s}")
 
                 mag = data.get("magnitude") or data.get("Magnitude")
                 if mag:

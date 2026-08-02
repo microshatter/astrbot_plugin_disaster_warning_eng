@@ -11,7 +11,6 @@ from typing import Any
 
 import aiohttp
 from aiohttp import ClientWebSocketResponse
-
 from astrbot.api import logger
 
 from .websocket_dispatch_service import WebSocketDispatchService
