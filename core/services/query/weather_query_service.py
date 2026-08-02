@@ -244,9 +244,9 @@ async def query_weather_alarm_data(
             "success": False,
             "error": "参数不足",
             "usage": [
-                "/气象预警查询 <省份/地名> [<预警类型>] [<预警颜色>]",
-                "/气象预警查询 全国 [<预警类型>] [<预警颜色>]",
-                "/气象预警查询 <预警ID>",
+                "/weather_alarm <省份/地名> [<预警类型>] [<预警颜色>]",
+                "/weather_alarm 全国 [<预警类型>] [<预警颜色>]",
+                "/weather_alarm <预警ID>",
             ],
         }
 

@@ -117,9 +117,9 @@ class PluginQueryCommandService(CommandTelemetryMixin):
             yield _quoted_plain_result(
                 "❌ 参数不足。\n"
                 "用法：\n"
-                "• /气象预警查询 <省份/地名> [<预警类型>] [<预警颜色>]\n"
-                "• /气象预警查询 全国 [<预警类型>] [<预警颜色>]\n"
-                "• /气象预警查询 <预警ID>"
+                "• /weather_alarm <省份/地名> [<预警类型>] [<预警颜色>]\n"
+                "• /weather_alarm 全国 [<预警类型>] [<预警颜色>]\n"
+                "• /weather_alarm <预警ID>"
             )
             return
 

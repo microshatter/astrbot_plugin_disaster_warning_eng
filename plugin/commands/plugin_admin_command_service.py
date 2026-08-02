@@ -342,7 +342,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
             log_summary = self.plugin.disaster_service.message_logger.get_log_summary()
             if not log_summary["enabled"]:
                 yield event.plain_result(
-                    "📋 原始消息日志功能未启用\n\n使用 /灾害预警日志开关 启用日志记录"
+                    "📋 原始消息日志功能未启用\n\n使用 /disaster_log_toggle 启用日志记录"
                 )
                 return
 
@@ -378,7 +378,7 @@ class PluginAdminCommandService(CommandTelemetryMixin):
 📡 数据源统计："""
             for source in log_summary["data_sources"]:
                 log_info += f"\n  • {source}"
-            log_info += "\n\n💡 提示：使用 /灾害预警日志开关 可以关闭日志记录"
+            log_info += "\n\n💡 提示：使用 /disaster_log_toggle 可以关闭日志记录"
             yield event.plain_result(log_info)
         except Exception as e:
             logger.error(f"[灾害预警] 获取日志信息失败: {e}")
@@ -523,10 +523,10 @@ class PluginAdminCommandService(CommandTelemetryMixin):
         if action != "查看":
             yield event.plain_result(
                 "❓ 请使用格式：\n"
-                "• /灾害预警配置 查看\n"
-                "• /灾害预警配置 查看 全局\n"
-                "• /灾害预警配置 查看 当前\n"
-                "• /灾害预警配置 查看 <会话UMO>"
+                "• /disaster_config 查看\n"
+                "• /disaster_config 查看 全局\n"
+                "• /disaster_config 查看 当前\n"
+                "• /disaster_config 查看 <会话UMO>"
             )
             return
 

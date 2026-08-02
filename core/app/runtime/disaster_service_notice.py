@@ -148,7 +148,7 @@ class DisasterServiceNoticeService:
         return "\n".join(message_lines)
 
     def get_eew_query_text(self) -> str:
-        """生成 /地震预警查询 主命令返回的结构化统计展示文本。"""
+        """生成 /earthquake_warning 主命令返回的结构化统计展示文本。"""
         # 文本生成并不直接读取原始事件，而是消费查询状态服务产出的结构化结果，
         # 这样命令输出与管理端展示可以复用同一份状态基础。
         data_sources_cfg = ConfigAccessor(self.service.config).data_sources_config()

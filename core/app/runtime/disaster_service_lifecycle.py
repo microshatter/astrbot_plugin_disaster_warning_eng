@@ -70,7 +70,7 @@ class DisasterServiceLifecycleService:
                     )
                 else:
                     logger.debug(
-                        "[灾害预警] 原始消息日志记录未启用。如需调试或记录原始数据，请使用命令 '/灾害预警日志开关' 启用。"
+                        "[灾害预警] 原始消息日志记录未启用。如需调试或记录原始数据，请使用命令 '/disaster_log_toggle' 启用。"
                     )
 
                 logger.info("[灾害预警] 灾害预警服务已启动")

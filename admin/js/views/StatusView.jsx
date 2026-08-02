@@ -15,17 +15,17 @@ const { Box, Button, Typography } = MaterialUI;
 function StatusView({ onOpenSimulation }) {
     // 从应用的状态总线订阅全局运行状态
     const { state, refreshData, fetchConnections, fetchConfig } = useAppContext();
-    const { status, wsConnected } = state; 
-    
+    const { status, wsConnected } = state;
+
     // 本地操作中按钮的交互加载状态
     const [reconnecting, setReconnecting] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
     const [resettingStats, setResettingStats] = React.useState(false);
-    
+
     // 获取全局 WebSocket 连接发送消息的方法
-    const { sendMessage } = useWebSocket(); 
+    const { sendMessage } = useWebSocket();
     // 使用全局 Toast 提示系统反馈
-    const { showToast } = useToast(); 
+    const { showToast } = useToast();
     const statusApi = window.DisasterStatusApi;
 
     /**
@@ -40,7 +40,7 @@ function StatusView({ onOpenSimulation }) {
                 fetchConnections(),
                 fetchConfig()
             ]);
-            
+
             // 2. 通过 Web Socket 连接通道发出实时通知同步刷新，若网络不可达则忽略
             if (wsConnected) {
                 const sent = sendMessage({ type: 'refresh' });
@@ -50,7 +50,7 @@ function StatusView({ onOpenSimulation }) {
             } else {
                 console.warn('[StatusView] WebSocket 未连接，仅通过 HTTP API 刷新');
             }
-            
+
             // 3. 略微延时，防止高频点击产生的闪烁并让旋转动画自然平稳过渡
             await new Promise(resolve => setTimeout(resolve, 500));
         } catch (e) {
@@ -132,12 +132,12 @@ function StatusView({ onOpenSimulation }) {
                 <div className="span-4">
                     <StatusCard />
                 </div>
-                
+
                 {/* 核心频次计数指标卡片 */}
                 <div className="span-4">
                     <StatsCard />
                 </div>
-                
+
                 {/* 右侧：快捷配置与指令维护面板 */}
                 <div className="span-4">
                     <div className="card status-quick-actions-card">
@@ -145,7 +145,7 @@ function StatusView({ onOpenSimulation }) {
                             <div className="status-card-icon status-card-icon--actions">🚀</div>
                             <Typography variant="h6" className="status-card-title">快捷操作</Typography>
                         </Box>
-                        
+
                         <Box className="status-quick-actions-list">
                             {/* 1. 点击启动仿真测试，生成虚拟的强震或气象警报来调试前端或推送机器人 */}
                             <button
@@ -155,7 +155,7 @@ function StatusView({ onOpenSimulation }) {
                                 <span className="status-action-icon">🧪</span>
                                 模拟预警仿真
                             </button>
-                            
+
                             {/* 2. 强制重启并重新拉取各个数据接收端口 */}
                             <button
                                 className={`btn btn-action status-action-button ${!status.running ? 'is-disabled' : ''}`}
@@ -200,7 +200,7 @@ function StatusView({ onOpenSimulation }) {
                                 className={`btn btn-action status-action-button ${!status.running ? 'is-disabled' : ''}`}
                                 onClick={handleResetStatistics}
                                 disabled={resettingStats || !status.running}
-                                title="清除插件统计数据（等价于 /灾害预警统计清除）"
+                                title="清除插件统计数据（等价于 /disaster_stats_clear）"
                             >
                                 {resettingStats ? (
                                     <>
