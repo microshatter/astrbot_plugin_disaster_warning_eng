@@ -44,6 +44,11 @@
             "type": "bool",
             "default": true
           },
+          "fanapi": {
+            "description": "FAN Studio API 密钥",
+            "type": "string",
+            "default": ""
+          },
           "china_earthquake_warning": {
             "description": "中国地震网地震预警",
             "type": "bool",
