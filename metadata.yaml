@@ -5,3 +5,12 @@ version: v1.6.0-beta.1
 author: DBJD-CR & Aloys233 & Kimi & Gemini & Claude & GPT
 repo: https://github.com/microshatter/astrbot_plugin_disaster_warning_eng
 astrbot_version: ">=4.11.2"
+tags:
+  - 灾害预警
+  - 防灾减灾
+  - 地震预警
+  - 气象预警
+  - 海啸预警
+  - 台风信息
+  - 生活实用
+  - 三方集成

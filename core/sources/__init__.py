@@ -3,6 +3,14 @@
 统一导出数据源目录、来源注册项与路由辅助能力。
 """
 
+from .display_registry import (
+    CONNECTION_DISPLAY_NAMES,
+    CONNECTION_GROUP_ALIAS,
+    CONNECTION_GROUP_ORDER,
+    DISPLAY_NAME_ALIASES,
+    SOURCE_ALIAS_MAP,
+    SOURCE_DISPLAY_MAP,
+)
 from .source_catalog import (
     SOURCE_CATALOG,
     get_source_entries,
@@ -19,6 +27,7 @@ from .source_router import (
     detect_fan_studio_source_entry,
     detect_fan_studio_source_id,
     get_fan_studio_source_id,
+    get_openquake_source_id,
     get_provider_source_map,
     get_wolfx_source_id,
     route_fan_studio_message,
@@ -29,9 +38,16 @@ __all__ = [
     "ProviderFamily",
     "SourceEntry",
     "SourceType",
+    "SOURCE_ALIAS_MAP",
+    "SOURCE_DISPLAY_MAP",
+    "CONNECTION_DISPLAY_NAMES",
+    "CONNECTION_GROUP_ALIAS",
+    "CONNECTION_GROUP_ORDER",
+    "DISPLAY_NAME_ALIASES",
     "detect_fan_studio_source_entry",
     "detect_fan_studio_source_id",
     "get_fan_studio_source_id",
+    "get_openquake_source_id",
     "get_provider_source_map",
     "get_source_entries",
     "get_source_entry",

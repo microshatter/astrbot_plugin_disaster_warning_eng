@@ -11,16 +11,34 @@ from datetime import datetime, timezone
 
 from astrbot.api import logger
 
+from ...services.telemetry.telemetry_utils import track_error_safely
+
 
 class DisasterServiceLifecycleService:
     """灾害服务生命周期编排服务。"""
 
+    # 静默硬超时（插件重载与冷启动统一采用 60 秒）
+    # 已就绪场景由协调器 _evaluate_ready 提前结束，不受此超时拖慢。
+    RELOAD_HARD_TIMEOUT_SECONDS = 60.0
+
     def __init__(self, service):
         # 这里只保存主服务引用；真正的状态与资源都仍由主服务统一持有。
         self.service = service  # 主服务 DisasterWarningService 实例
+        # 是否推迟静默武装（首次启动/进程重启时，真正武装推迟到 start() 内部
+        # ws_manager.start() 之后、建连任务创建之前执行）
+        self._defer_arm = False
 
-    async def start(self) -> None:
-        """异步启动灾害预警服务。"""
+    async def start(self, *, defer_silence_arm: bool = False) -> None:
+        """异步启动灾害预警服务。
+
+        Args:
+            defer_silence_arm: 为 True 时推迟静默武装（首次启动/进程重启）。
+                此时协调器先进入 PENDING 吸收模式（事件被吸收播种但不计时），
+                真正武装在 start() 内部 ws_manager.start() 之后、建连任务创建
+                之前完成，确保硬超时从"建连真正开始"时刻起算，不被 AstrBot
+                加载耗时或数据库初始化提前耗尽。arm_startup_silence() 公共
+                入口仅作为兜底机制（PENDING 超时逃生等）保留。
+        """
         # 启动过程必须串行化，避免重复启动导致连接、定时任务或缓存恢复被执行多次。
         async with self.service._start_lock:
             if self.service.running:
@@ -35,7 +53,26 @@ class DisasterServiceLifecycleService:
                 self.service.start_time = datetime.now(
                     timezone.utc
                 )  # 服务启动UTC时间戳
-                logger.info("[灾害预警] 正在启动灾害预警服务...")
+                logger.debug("[灾害预警] 正在启动灾害预警服务...")
+
+                # 武装启动静默：在真正建连/轮询前注册门闩。
+                # 首次启动/进程重启：静默先进入 PENDING 吸收模式（AstrBot 加载
+                # 窗口内的事件仍被吸收播种，但不计时），真正武装推迟到本方法内
+                # WS 底层就绪之后、建连任务创建之前（见下方 ws_manager.start()
+                # 之后的正式武装），确保硬超时从"建连真正开始"时刻起算；
+                # 插件重载时 AstrBot 已就绪，立即武装（60 秒兜底）。
+                if defer_silence_arm:
+                    self._defer_arm = True
+                    # 待武装期间协调器进入 PENDING：AstrBot 加载窗口内的事件
+                    # 仍被吸收播种，但不会开始计时/就绪判定。
+                    self._begin_deferred_silence()
+                    logger.debug(
+                        "[灾害预警] 静默启动已进入待武装状态，将在建连前正式武装"
+                    )
+                else:
+                    self._arm_startup_silence(
+                        hard_timeout_seconds=self.RELOAD_HARD_TIMEOUT_SECONDS
+                    )
 
                 # 启动顺序刻意遵循“先恢复状态，再开放接入”的原则：
                 # 1. 初始化统计存储；
@@ -51,6 +88,17 @@ class DisasterServiceLifecycleService:
                 # 运行时任务按“WebSocket 管理器 -> 建立连接 -> 定时 HTTP 拉取 -> 清理任务”启动。
                 # 这个顺序可以确保底层接入设施先就绪，再逐层开启依赖它们的上层任务。
                 await self.service.ws_manager.start()  # 开启 WebSocket 底层支持
+
+                # 首次启动/进程重启：正式武装启动静默（此前处于 PENDING 吸收态）。
+                # 此刻 running 已置位、数据库/缓存已恢复、WS 底层已就绪，
+                # 硬超时从"建连任务真正创建"起算，不再被 AstrBot 加载空窗
+                # 或数据库初始化耗时提前耗尽；插件重载场景已在开头武装，此处幂等跳过。
+                if self._defer_arm:
+                    self._defer_arm = False
+                    self._arm_startup_silence(
+                        hard_timeout_seconds=self.RELOAD_HARD_TIMEOUT_SECONDS
+                    )
+
                 await (
                     self.service._establish_websocket_connections()
                 )  # 开启 WebSocket 连接监听协程
@@ -58,6 +106,40 @@ class DisasterServiceLifecycleService:
                     self.service._start_scheduled_http_fetch()
                 )  # 开启定时拉取 HTTP 接口协程
                 await self.service._start_cleanup_task()  # 开启过期缓存定时清理协程
+                # S-Net 专用轮询（MSIL 瓦片，不同于 Wolfx 列表补偿）
+                snet_poll = getattr(self.service, "snet_poll_service", None)
+                if snet_poll is not None:
+                    await snet_poll.start()
+
+                # EQSC AccessToken 必须先于海啸/台风轮询预热：
+                # 两路轮询共享同一 token_manager；若首轮并发请求时 token 尚未就绪，
+                # 会各自 force_refresh 造成重复 createAccessToken 与 401 噪声。
+                if hasattr(self.service, "schedule_eqsc_token_warmup"):
+                    self.service.schedule_eqsc_token_warmup()
+
+                # EQSC 海啸 HTTP 轮询（依赖 AccessToken；预热已调度，可并行等待）
+                eqsc_tsunami_poll = getattr(
+                    self.service, "eqsc_tsunami_poll_service", None
+                )
+                if eqsc_tsunami_poll is not None:
+                    await eqsc_tsunami_poll.start()
+                # EQSC 台风 HTTP 独立轮询（不依赖 FAN 触发）
+                eqsc_typhoon_poll = getattr(
+                    self.service, "eqsc_typhoon_poll_service", None
+                )
+                if eqsc_typhoon_poll is not None:
+                    await eqsc_typhoon_poll.start()
+                eqsc_cenc_ir_poll = getattr(
+                    self.service, "eqsc_cenc_intensity_poll_service", None
+                )
+                if eqsc_cenc_ir_poll is not None:
+                    await eqsc_cenc_ir_poll.start()
+                # 连接健康采样：依赖 statistics_manager 已 initialize
+                health_service = getattr(
+                    self.service, "connection_health_service", None
+                )
+                if health_service is not None:
+                    await health_service.start()
                 if getattr(self.service, "notification_center", None):
                     await (
                         self.service.notification_center.start()
@@ -73,16 +155,155 @@ class DisasterServiceLifecycleService:
                         "[灾害预警] 原始消息日志记录未启用。如需调试或记录原始数据，请使用命令 '/disaster_log_toggle' 启用。"
                     )
 
-                logger.info("[灾害预警] 灾害预警服务已启动")
+                # EQSC 历史台风重建放到启动完成后的后台任务：
+                # 此时数据库已就绪，且不会阻塞 WebSocket/管理端启动。
+                if hasattr(self.service, "schedule_typhoon_db_rebuild"):
+                    self.service.schedule_typhoon_db_rebuild()
+
+                logger.debug("[灾害预警] 灾害预警服务已启动")
             except Exception as e:
                 # 启动失败时必须回滚运行标记，避免外部误判服务已可用。
                 logger.error(f"[灾害预警] 启动服务失败: {e}")
                 self.service.running = False
-                if self.service._telemetry and self.service._telemetry.enabled:
-                    await self.service._telemetry.track_error(
-                        e, module="core.disaster_service.start"
-                    )
+                # 复位延迟武装标记：本次启动已失败，避免下次非延迟启动
+                # （插件重载）重复执行延迟武装或重复武装。
+                self._defer_arm = False
+                coordinator = getattr(self.service, "startup_silence", None)
+                if coordinator is not None:
+                    coordinator.disarm()
+                # 统一 best-effort 封装上报启动错误（该处为服务层内部上报点之一，
+                # 异常会继续向上传播；上层 main.initialize 通过 _telemetry_reported 标记去重）。
+                await track_error_safely(
+                    self.service._telemetry,
+                    e,
+                    module="core.disaster_service.start",
+                    log_context="服务启动错误遥测",
+                )
+                # 标记该异常已在服务内部上报过遥测，供外层（main.initialize）去重。
+                try:
+                    setattr(e, "_telemetry_reported", True)
+                except Exception:
+                    pass
                 raise
+
+    def arm_startup_silence(self, *, hard_timeout_seconds: float | None = None) -> None:
+        """正式武装启动静默（公共入口，含 PENDING 超时逃生兜底调用）。
+
+        首次启动/进程重启的主路径是 start() 内部在建连前直接调用
+        _arm_startup_silence()，硬超时从"建连真正开始"时刻起算；
+        本入口保留给 PENDING 超时逃生等兜底路径复用，避免静默永久停在 PENDING。
+
+        若服务尚未运行（running 仍为 False），或仍处于延迟武装等待期
+        （_defer_arm 为 True），会调度延迟重试后再武装。
+        """
+        if not getattr(self.service, "running", False) or self._defer_arm:
+            # 服务后台任务尚未真正开始，或首次启动仍等待 start() 内部在建连前
+            # 完成正式武装：延迟重试，避免时序竞态导致静默永久停在 PENDING，
+            # 也避免 PENDING watchdog 逃生提前武装并清除 _defer_arm，
+            # 导致硬超时从"建连真正开始"之前就起算。
+            logger.warning(
+                "[灾害预警] 服务尚未就绪或仍处于延迟武装等待期，静默启动推迟重试"
+            )
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                return
+            loop.call_later(
+                1.0,
+                lambda: self.arm_startup_silence(
+                    hard_timeout_seconds=hard_timeout_seconds
+                ),
+            )
+            return
+        self._defer_arm = False
+        self._arm_startup_silence(hard_timeout_seconds=hard_timeout_seconds)
+
+    def _begin_deferred_silence(self) -> None:
+        """让协调器进入待武装吸收模式（PENDING）。"""
+        coordinator = getattr(self.service, "startup_silence", None)
+        if coordinator is None:
+            return
+        begin = getattr(coordinator, "begin_deferred", None)
+        if not callable(begin):
+            return
+        debug_config: dict = {}
+        config = getattr(self.service, "config", {}) or {}
+        if isinstance(config, dict):
+            raw_debug = config.get("debug_config", {})
+            if isinstance(raw_debug, dict):
+                debug_config = raw_debug
+        enabled = coordinator.resolve_enabled(debug_config)
+        try:
+            begin(enabled=enabled)
+        except Exception as exc:
+            logger.debug(f"[灾害预警] 进入待武装静默失败（已忽略）: {exc}")
+
+    def _arm_startup_silence(
+        self, *, hard_timeout_seconds: float | None = None
+    ) -> None:
+        """根据配置与连接计划武装启动静默协调器。"""
+        coordinator = getattr(self.service, "startup_silence", None)
+        if coordinator is None:
+            return
+        debug_config: dict = {}
+        config = getattr(self.service, "config", {}) or {}
+        if isinstance(config, dict):
+            raw_debug = config.get("debug_config", {})
+            if isinstance(raw_debug, dict):
+                debug_config = raw_debug
+        enabled = coordinator.resolve_enabled(debug_config)
+
+        # connections 由 ConnectionPlanBuilder 产出，本身即为 WebSocket 连接计划，
+        # 无需再按 handler 名称白名单过滤，以免遗漏新增数据源。
+        expected_ws: list[str] = []
+        connections = getattr(self.service, "connections", None) or {}
+        if isinstance(connections, dict):
+            for name, plan in connections.items():
+                if not isinstance(plan, dict):
+                    continue
+                conn_name = str(name or "").strip()
+                if conn_name:
+                    expected_ws.append(conn_name)
+
+        expected_polls: list[str] = []
+        snet_poll = getattr(self.service, "snet_poll_service", None)
+        if snet_poll is not None and getattr(snet_poll, "is_enabled", lambda: False)():
+            expected_polls.append("snet_msil")
+        eqsc_tsunami = getattr(self.service, "eqsc_tsunami_poll_service", None)
+        if (
+            eqsc_tsunami is not None
+            and getattr(eqsc_tsunami, "is_enabled", lambda: False)()
+        ):
+            expected_polls.append("eqsc_tsunami")
+        eqsc_typhoon = getattr(self.service, "eqsc_typhoon_poll_service", None)
+        if (
+            eqsc_typhoon is not None
+            and getattr(eqsc_typhoon, "is_enabled", lambda: False)()
+        ):
+            expected_polls.append("eqsc_typhoon")
+        eqsc_cenc_ir = getattr(self.service, "eqsc_cenc_intensity_poll_service", None)
+        if (
+            eqsc_cenc_ir is not None
+            and getattr(eqsc_cenc_ir, "is_enabled", lambda: False)()
+        ):
+            expected_polls.append("eqsc_cenc_ir")
+
+        coordinator.arm(
+            enabled=enabled,
+            expected_ws=expected_ws,
+            expected_polls=expected_polls,
+            hard_timeout_seconds=hard_timeout_seconds,
+        )
+
+        # 静默协调器武装后再预热浏览器渲染底座：
+        # 首次启动时此刻 AstrBot 已加载完成、事件循环空闲，避免页面创建超时噪音；
+        # 插件重载时 AstrBot 已就绪，同样安全。预热自带异常吞噬，不影响主链路。
+        warmup = getattr(self.service, "warmup_browser", None)
+        if callable(warmup):
+            try:
+                warmup()
+            except Exception as exc:
+                logger.debug(f"[灾害预警] 浏览器预热触发失败（已忽略）: {exc}")
 
     async def cancel_and_wait(self, tasks: list[asyncio.Task]) -> None:
         """
@@ -107,10 +328,23 @@ class DisasterServiceLifecycleService:
                 return
             self.service._stopping = True
             try:
-                logger.info("[灾害预警] 正在停止灾害预警服务...")
+                # 记录停止流程起始时间，供停止汇总大屏统计停机耗时。
+                self.service.stop_started_at = datetime.now(timezone.utc)
+                logger.debug("[灾害预警] 正在停止灾害预警服务...")
                 was_running = self.service.running
                 # 提前将运行标记切为 False，阻止新任务继续按“服务运行中”路径工作。
                 self.service.running = False
+                coordinator = getattr(self.service, "startup_silence", None)
+                if coordinator is not None:
+                    coordinator.disarm()
+
+                # 立刻停连接健康采样：避免 running=False 后仍采样，把通道误记为
+                # major_outage 并触发错误事故开单。
+                health_service = getattr(
+                    self.service, "connection_health_service", None
+                )
+                if health_service is not None:
+                    await health_service.stop()
 
                 # 只有服务曾实际运行过，缓存状态才有落盘意义；
                 # 若初始化后从未成功启动，则无需写出这些状态文件。
@@ -144,12 +378,55 @@ class DisasterServiceLifecycleService:
                 # 任务回收完成后，再逐项释放底层基础设施资源。
                 if getattr(self.service, "notification_center", None):
                     await self.service.notification_center.stop()  # 停止网页端通知服务
+
+                # 停机前推送气象预警聚合缓冲区中尚未发送的事件，避免丢失。
+                # 必须放在 ws_manager.stop() 之前：此时底座连接仍然可用，
+                # 合并转发能成功；若等连接销毁后再推送，发送必然失败。
+                # 此时 WebSocket 连接协程已被取消，不会再有新事件进入缓冲，安全。
+                weather_agg = getattr(
+                    self.service, "_weather_aggregation_service", None
+                )
+                if weather_agg is not None:
+                    try:
+                        await weather_agg.flush_all()
+                    except Exception as flush_err:
+                        logger.debug(
+                            f"[灾害预警] 停机时推送气象预警聚合缓冲区失败（已忽略）: {flush_err}"
+                        )
+
                 await self.service.ws_manager.stop()  # 关闭并断开所有活跃的底座网络连接
 
                 if self.service.http_fetcher:
                     await (
                         self.service.http_fetcher.close()
                     )  # 关闭 HTTP 客户端 Session 连接池
+
+                # 先停 EQSC 海啸/台风轮询客户端（共享 token 时不会关闭 token_manager）
+                eqsc_tsunami_poll = getattr(
+                    self.service, "eqsc_tsunami_poll_service", None
+                )
+                if eqsc_tsunami_poll is not None:
+                    await eqsc_tsunami_poll.stop()
+                eqsc_typhoon_poll = getattr(
+                    self.service, "eqsc_typhoon_poll_service", None
+                )
+                if eqsc_typhoon_poll is not None:
+                    await eqsc_typhoon_poll.stop()
+                eqsc_cenc_ir_poll = getattr(
+                    self.service, "eqsc_cenc_intensity_poll_service", None
+                )
+                if eqsc_cenc_ir_poll is not None:
+                    await eqsc_cenc_ir_poll.stop()
+
+                # 先关闭台风富化服务，最后关闭 EQSC 通道服务（停止保活并释放令牌管理器资源）。
+                typhoon_enrichment = getattr(
+                    self.service, "typhoon_enrichment_service", None
+                )
+                if typhoon_enrichment:
+                    await typhoon_enrichment.close()
+                eqsc_channel = getattr(self.service, "eqsc_channel_service", None)
+                if eqsc_channel:
+                    await eqsc_channel.close()
 
                 # 统计数据库只在已初始化时关闭，避免访问尚未建立的数据库句柄。
                 if (
@@ -162,13 +439,16 @@ class DisasterServiceLifecycleService:
                     # 重载插件后需要允许统计管理器重新建库/重载，否则会保留“已初始化”假状态。
                     self.service.statistics_manager._db_initialized = False
 
-                logger.info("[灾害预警] 灾害预警服务已停止")
+                logger.debug("[灾害预警] 灾害预警服务已停止")
             except Exception as e:
                 logger.error(f"[灾害预警] 停止服务时出错: {e}")
-                if self.service._telemetry and self.service._telemetry.enabled:
-                    await self.service._telemetry.track_error(
-                        e, module="core.disaster_service.stop"
-                    )
+                # 统一 best-effort 封装上报停止错误
+                await track_error_safely(
+                    self.service._telemetry,
+                    e,
+                    module="core.disaster_service.stop",
+                    log_context="服务停止错误遥测",
+                )
             finally:
                 # 无论停止是否成功，都要清除“正在停止”标记，防止后续流程被永久阻塞。
                 self.service._stopping = False
