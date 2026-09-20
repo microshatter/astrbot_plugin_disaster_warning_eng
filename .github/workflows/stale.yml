@@ -33,7 +33,7 @@ jobs:
         run: |
           gh label create "status/stale" --color "EDEDED" --description "Issue with no activity for a long time" || gh label edit "status/stale" --color "EDEDED" --description "Issue with no activity for a long time"
 
-      - uses: actions/stale@v10
+      - uses: actions/stale@v11
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           operations-per-run: 200
