@@ -319,9 +319,9 @@ WOLFX_SOURCE_REGISTRY = get_provider_source_map(ProviderFamily.WOLFX)
 
 
 __all__ = [
-    "RoutedMessage",
     "FAN_STUDIO_SOURCE_REGISTRY",
     "WOLFX_SOURCE_REGISTRY",
+    "RoutedMessage",
     "detect_fan_studio_source_entry",
     "detect_fan_studio_source_id",
     "get_fan_studio_source_id",

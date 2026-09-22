@@ -152,7 +152,7 @@ class DisasterServiceLifecycleService:
                     )
                 else:
                     logger.debug(
-                        "[灾害预警] 原始消息日志记录未启用。如需调试或记录原始数据，请使用命令 '/灾害预警日志开关' 启用。"
+                        "[灾害预警] 原始消息日志记录未启用。如需调试或记录原始数据，请使用命令 '/disaster_log_toggle' 启用。"
                     )
 
                 # EQSC 历史台风重建放到启动完成后的后台任务：

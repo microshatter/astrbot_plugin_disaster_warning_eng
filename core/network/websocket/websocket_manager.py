@@ -11,7 +11,6 @@ from typing import Any
 
 import aiohttp
 from aiohttp import ClientWebSocketResponse
-
 from astrbot.api import logger
 
 from ...services.telemetry.telemetry_utils import track_error_safely

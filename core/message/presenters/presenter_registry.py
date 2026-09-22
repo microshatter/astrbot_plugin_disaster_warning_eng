@@ -127,9 +127,9 @@ def present_message(
 
 
 __all__ = [
+    "get_presentation_type_for_source",
     "get_presenter",
     "get_presenter_by_text_key",
-    "get_presentation_type_for_source",
-    "present_message",
     "get_text_presenter_keys",
+    "present_message",
 ]

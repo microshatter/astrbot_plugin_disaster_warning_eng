@@ -67,15 +67,13 @@ class NotificationRemoteClient:
 
         for attempt in range(len(retry_delays) + 1):
             try:
-                async with aiohttp.ClientSession(
-                    timeout=timeout, headers=headers
-                ) as session:
-                    async with session.get(url) as response:
-                        if response.status >= 400:
-                            raise RuntimeError(
-                                f"通知接口请求失败，HTTP {response.status}"
-                            )
-                        payload = await response.json(content_type=None)
+                async with (
+                    aiohttp.ClientSession(timeout=timeout, headers=headers) as session,
+                    session.get(url) as response,
+                ):
+                    if response.status >= 400:
+                        raise RuntimeError(f"通知接口请求失败，HTTP {response.status}")
+                    payload = await response.json(content_type=None)
                 if not isinstance(payload, list):
                     raise ValueError("通知接口返回体不是数组")
                 return payload

@@ -194,24 +194,24 @@ class DisasterWarningPlugin(Star):
     # 1. 帮助入口
     # ======================================================================
 
-    @filter.command("灾害预警")
+    @filter.command("disaster", alias={"灾害预警"})
     async def disaster_warning_help(self, event: AstrMessageEvent):
         """灾害预警插件帮助"""
         header = (
             "🚨 灾害预警插件使用指南\n"
             "──────────────\n"
             "📌 参数约定：<必填> [可选]\n"
-            "💡 输入 /灾害预警 可随时查看本指南\n"
+            "💡 输入 /disaster 可随时查看本指南\n"
             "📍 各指令详情与完整示例请查阅 README"
         )
         blocks = [
             # 1. 地震速查
             (
                 "🌐 地震速查\n"
-                "• /地震列表查询 [数据源] [数量] [格式]\n"
+                "• /earthquake_list [数据源] [数量] [格式]（别名 /地震列表查询 /地震列表）\n"
                 "   数据源：cenc/jma；格式：card/text\n"
-                "   例：/地震列表查询 jma 10 card\n"
-                "• /地震预警查询（别名 /地震预警）\n"
+                "   例：/earthquake_list jma 10 card\n"
+                "• /earthquake_warning（别名 /地震预警查询 /地震预警）\n"
                 "   查询各机构 EEW 状态与无 EEW 计时"
             ),
             # 2. 地震专业分析
@@ -231,8 +231,8 @@ class DisasterWarningPlugin(Star):
             # 3. 气象预警与雷达
             (
                 "⚡ 气象预警与雷达\n"
-                "• /气象预警查询 <省份|全国> [类型] [颜色] [全部|全日期]\n"
-                "   或 /气象预警查询 <预警ID>\n"
+                "• /weather_alarm <省份|全国> [类型] [颜色] [全部|全日期]（别名 /气象预警查询 /气象预警）\n"
+                "   或 /weather_alarm <预警ID>\n"
                 "   默认近 72 小时，全部/全日期查全量历史\n"
                 "• /雷达 <站点名>（如 /雷达 北京、/雷达 全国）\n"
                 "• /雷达动图 <站点名>\n"
@@ -276,23 +276,23 @@ class DisasterWarningPlugin(Star):
             ),
             # 8. 模拟预警
             (
-                "🧪 灾害预警模拟（数据源置末尾，决定灾种）\n"
-                "• 地震：/灾害预警模拟 <纬度> <经度> <震级> [深度] [源]\n"
-                "• 海啸：/灾害预警模拟 <标题> <等级> <位置> [源震级] [源]\n"
-                "• 气象：/灾害预警模拟 <标题> <正文> [预警编码] [源]\n"
-                "• 台风：/灾害预警模拟 <编号> <名称> [强度] [源]\n"
-                "例：/灾害预警模拟 30.6 103.0 5.2 10 cea_fanstudio"
+                "🧪 /disaster_simulate（别名 /灾害预警模拟；数据源置末尾，决定灾种）\n"
+                "• 地震：/disaster_simulate <纬度> <经度> <震级> [深度] [源]\n"
+                "• 海啸：/disaster_simulate <标题> <等级> <位置> [源震级] [源]\n"
+                "• 气象：/disaster_simulate <标题> <正文> [预警编码] [源]\n"
+                "• 台风：/disaster_simulate <编号> <名称> [强度] [源]\n"
+                "例：/disaster_simulate 30.6 103.0 5.2 10 cea_fanstudio"
             ),
             # 9. 运维管理
             (
                 "🛠️ 运维管理\n"
-                "• /灾害预警状态 - 服务运行状态\n"
+                "• /disaster_status - 服务运行状态\n"
                 "• /灾害预警重启 - 重载插件\n"
-                "• /灾害预警重连 - 强制重连离线数据源\n"
-                "• /灾害预警统计 / 灾害预警统计清除\n"
-                "• /灾害预警推送开关 - 会话推送开关\n"
-                "• /灾害预警配置 查看 [全局|当前|<会话UMO>]\n"
-                "• /灾害预警日志 / 日志开关 / 日志清除\n"
+                "• /disaster_reconnect - 强制重连离线数据源\n"
+                "• /disaster_stats / disaster_stats_clear\n"
+                "• /disaster_push_toggle - 会话推送开关\n"
+                "• /disaster_config 查看 [全局|当前|<会话UMO>]\n"
+                "• /disaster_logs / disaster_log_toggle / disaster_log_clear\n"
                 "• /服务器切换 - 查看/切换数据源主备服务器\n"
                 "• /重启AstrBot - 重启整个 AstrBot 进程\n"
                 "──────────────\n"
@@ -321,7 +321,7 @@ class DisasterWarningPlugin(Star):
     # 2. 地震类指令
     # ======================================================================
 
-    @filter.command("地震列表查询", alias={"地震列表"})
+    @filter.command("earthquake_list", alias={"地震列表查询", "地震列表"})
     async def query_earthquake_list(
         self,
         event: AstrMessageEvent,
@@ -335,14 +335,6 @@ class DisasterWarningPlugin(Star):
             source=source,
             count=count,
             mode=mode,
-        ):
-            yield result
-
-    @filter.command("地震预警查询", alias={"地震预警"})
-    async def query_earthquake_warning(self, event: AstrMessageEvent):
-        """查询各机构地震预警（EEW）状态"""
-        async for result in self._query_command_service.handle_query_earthquake_warning(
-            event
         ):
             yield result
 
@@ -489,25 +481,6 @@ class DisasterWarningPlugin(Star):
     # ======================================================================
     # 3. 气象类指令
     # ======================================================================
-
-    @filter.command("气象预警查询", alias={"气象预警"})
-    async def query_weather_alarm(
-        self,
-        event: AstrMessageEvent,
-        keyword: str = None,
-        optional_a: str = None,
-        optional_b: str = None,
-        optional_c: str = None,
-    ):
-        """气象预警查询（支持 [全部|全日期] 和关闭 72 小时过滤）"""
-        async for result in self._query_command_service.handle_query_weather_alarm(
-            event,
-            keyword=keyword,
-            optional_a=optional_a,
-            optional_b=optional_b,
-            optional_c=optional_c,
-        ):
-            yield result
 
     @filter.command("雷达")
     async def radar_image(self, event: AstrMessageEvent, name: str = None):
@@ -694,39 +667,8 @@ class DisasterWarningPlugin(Star):
             yield result
 
     # ======================================================================
-    # 5. 模拟测试指令
-    # ======================================================================
-
-    @filter.command("灾害预警模拟")
-    async def simulate_disaster(
-        self,
-        event: AstrMessageEvent,
-        arg1: str = None,
-        arg2: str = None,
-        arg3: str = None,
-        arg4: str = None,
-        arg5: str = None,
-    ):
-        """模拟灾害事件测试预警响应。"""
-        async for result in self._query_command_service.handle_simulate_disaster(
-            event,
-            arg1=arg1,
-            arg2=arg2,
-            arg3=arg3,
-            arg4=arg4,
-            arg5=arg5,
-        ):
-            yield result
-
-    # ======================================================================
     # 6. 运维管理指令（仅管理员）
     # ======================================================================
-
-    @filter.command("灾害预警状态")
-    async def disaster_status(self, event: AstrMessageEvent):
-        """查看灾害预警服务状态"""
-        async for result in self._admin_command_service.handle_disaster_status(event):
-            yield result
 
     @filter.command("灾害预警重启", alias={"灾害预警重载"})
     async def disaster_restart(self, event: AstrMessageEvent):
@@ -751,7 +693,7 @@ class DisasterWarningPlugin(Star):
         async for result in self._admin_command_service.handle_restart_astrbot(event):
             yield result
 
-    @filter.command("灾害预警重连")
+    @filter.command("disaster_reconnect", alias={"灾害预警重连"})
     async def disaster_reconnect(self, event: AstrMessageEvent):
         """强制对所有已启用但离线的数据源发起重连"""
         async for result in self._admin_command_service.handle_disaster_reconnect(
@@ -759,25 +701,53 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("灾害预警统计")
+    @filter.command("disaster_status", alias={"灾害预警状态"})
+    async def disaster_status(self, event: AstrMessageEvent):
+        """查看灾害预警服务状态"""
+        async for result in self._admin_command_service.handle_disaster_status(event):
+            yield result
+
+    @filter.command("disaster_stats", alias={"灾害预警统计"})
     async def disaster_stats(self, event: AstrMessageEvent):
         """查看灾害预警详细统计"""
         async for result in self._admin_command_service.handle_disaster_stats(event):
             yield result
 
-    @filter.command("灾害预警统计清除")
+    @filter.command("disaster_logs", alias={"灾害预警日志"})
+    async def disaster_logs(self, event: AstrMessageEvent):
+        """查看原始消息日志信息"""
+        async for result in self._admin_command_service.handle_disaster_logs(event):
+            yield result
+
+    @filter.command("disaster_log_toggle", alias={"灾害预警日志开关"})
+    async def toggle_message_logging(self, event: AstrMessageEvent):
+        """开关原始消息日志记录"""
+        async for result in self._admin_command_service.handle_toggle_message_logging(
+            event
+        ):
+            yield result
+
+    @filter.command("disaster_log_clear", alias={"灾害预警日志清除"})
+    async def clear_message_logs(self, event: AstrMessageEvent):
+        """清除所有原始消息日志"""
+        async for result in self._admin_command_service.handle_clear_message_logs(
+            event
+        ):
+            yield result
+
+    @filter.command("disaster_stats_clear", alias={"灾害预警统计清除"})
     async def clear_statistics(self, event: AstrMessageEvent):
         """清除统计数据"""
         async for result in self._admin_command_service.handle_clear_statistics(event):
             yield result
 
-    @filter.command("灾害预警推送开关")
+    @filter.command("disaster_push_toggle", alias={"灾害预警推送开关"})
     async def toggle_push(self, event: AstrMessageEvent):
         """开关当前会话的推送"""
         async for result in self._admin_command_service.handle_toggle_push(event):
             yield result
 
-    @filter.command("灾害预警配置")
+    @filter.command("disaster_config", alias={"灾害预警配置"})
     async def disaster_config(
         self,
         event: AstrMessageEvent,
@@ -787,28 +757,6 @@ class DisasterWarningPlugin(Star):
         """查看当前配置信息（支持按会话查看差异覆写）"""
         async for result in self._admin_command_service.handle_disaster_config(
             event, action=action, target=target
-        ):
-            yield result
-
-    @filter.command("灾害预警日志")
-    async def disaster_logs(self, event: AstrMessageEvent):
-        """查看原始消息日志信息"""
-        async for result in self._admin_command_service.handle_disaster_logs(event):
-            yield result
-
-    @filter.command("灾害预警日志开关")
-    async def toggle_message_logging(self, event: AstrMessageEvent):
-        """开关原始消息日志记录"""
-        async for result in self._admin_command_service.handle_toggle_message_logging(
-            event
-        ):
-            yield result
-
-    @filter.command("灾害预警日志清除")
-    async def clear_message_logs(self, event: AstrMessageEvent):
-        """清除所有原始消息日志"""
-        async for result in self._admin_command_service.handle_clear_message_logs(
-            event
         ):
             yield result
 
@@ -838,6 +786,53 @@ class DisasterWarningPlugin(Star):
         """为消息链添加引用回复段（若可用）。"""
         return PluginCommandSupportService.with_quote_reply(event, chain)
 
+    @filter.command("weather_alarm", alias={"气象预警查询", "气象预警"})
+    async def query_weather_alarm(
+        self,
+        event: AstrMessageEvent,
+        keyword: str = None,
+        optional_a: str = None,
+        optional_b: str = None,
+        optional_c: str = None,
+    ):
+        """气象预警查询（支持 [全部|全日期] 和关闭 72 小时过滤）"""
+        async for result in self._query_command_service.handle_query_weather_alarm(
+            event,
+            keyword=keyword,
+            optional_a=optional_a,
+            optional_b=optional_b,
+            optional_c=optional_c,
+        ):
+            yield result
+
+    @filter.command("earthquake_warning", alias={"地震预警查询", "地震预警"})
+    async def query_earthquake_warning(self, event: AstrMessageEvent):
+        """查询各机构地震预警（EEW）状态"""
+        async for result in self._query_command_service.handle_query_earthquake_warning(
+            event
+        ):
+            yield result
+
+    @filter.command("disaster_simulate", alias={"灾害预警模拟"})
+    async def simulate_earthquake(
+        self,
+        event: AstrMessageEvent,
+        lat: float,
+        lon: float,
+        magnitude: float,
+        depth: float = 10.0,
+        source: str = "cea_fanstudio",
+    ):
+        """模拟地震事件测试预警响应"""
+        async for result in self._query_command_service.handle_simulate_disaster(
+            event,
+            lat=lat,
+            lon=lon,
+            magnitude=magnitude,
+            depth=depth,
+            source=source,
+        ):
+            yield result
     @filter.on_astrbot_loaded()
     async def on_astrbot_loaded(self):
         """AstrBot加载完成时的钩子"""

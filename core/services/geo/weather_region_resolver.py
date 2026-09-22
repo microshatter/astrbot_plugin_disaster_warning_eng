@@ -16,7 +16,6 @@ import re
 import time
 
 import aiohttp
-
 from astrbot.api import logger
 
 from ....utils.china_regions import CHINA_PROVINCES

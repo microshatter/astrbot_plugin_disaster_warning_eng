@@ -353,8 +353,7 @@ class StatsQueryService:
             if start_date > now:
                 return []
 
-            if end_date > now:
-                end_date = now
+            end_date = min(end_date, now)
 
             delta = (end_date - start_date).days + 1
 

@@ -9,7 +9,6 @@ from urllib.parse import urlparse
 
 import aiohttp
 from aiohttp import ClientSession
-
 from astrbot.api import logger
 
 

@@ -80,7 +80,7 @@ class RemoteMediaFetcher:
         self,
         url: str,
         *,
-        timeout_seconds: int | float | None = None,
+        timeout_seconds: float | None = None,
         max_bytes: int = 10 * 1024 * 1024,
         expected_kind: str = "image",
     ) -> dict[str, Any]:

@@ -1,5 +1,5 @@
-name: '🎉 功能建议'
-description: 提交建议帮助我们改进。
+name: '🎉 功能建议 / Feature Request'
+description: 提交建议帮助我们改进。/ Submit a suggestion to help us improve.
 title: '[Feature] '
 labels: [ 'type/feat' ]
 body:
@@ -8,92 +8,99 @@ body:
       value: |
         感谢您抽出时间提出新功能建议，请准确解释您的想法。
 
+        Thank you for taking the time to propose a new feature. Please clearly explain your idea.
+
   - type: textarea
     attributes:
-      label: 描述
-      description: 简短描述您的功能建议。
+      label: 描述 / Description
+      description: 简短描述您的功能建议。/ Briefly describe your feature suggestion.
       placeholder: >
         请简要说明你希望新增、改进或调整的功能。
+        / Please briefly describe the feature you want to add, improve, or adjust.
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 使用场景
-      description: 你想要发生什么？
+      label: 使用场景 / Use case
+      description: 你想要发生什么？/ What do you expect to happen?
       placeholder: >
         一个清晰且具体的描述这个功能的使用场景。
+        / A clear and specific description of the use case for this feature.
     validations:
       required: true
 
   - type: dropdown
     attributes:
-      label: 你希望该功能主要服务于哪个消息平台？
-      description: 请选择最主要的平台。如该建议希望兼容全部平台，可选择“其他平台”并在下方补充说明中填写“全平台”或具体范围。
+      label: 你希望该功能主要服务于哪个消息平台？/ Which message platform should this feature primarily serve?
+      description: 请选择最主要的平台。如该建议希望兼容全部平台，可选择“其他平台”并在下方补充说明中填写“全平台”或具体范围。/ Please select the primary platform. If the suggestion should be compatible with all platforms, select "Other platform" and write "All platforms" or a specific scope in the notes below.
       options:
-        - 'QQ 官方机器人 (Websockets 方式)'
-        - 'QQ 官方机器人 (Webhook 方式)'
-        - 'OneBot v11 (原 QQ 个人号)'
-        - '企微应用'
-        - '企微智能机器人'
-        - '微信公众号'
-        - '个人微信'
-        - '飞书'
-        - '钉钉'
+        - 'QQ 官方机器人 (Websockets 方式) / QQ Official Bot (Websockets)'
+        - 'QQ 官方机器人 (Webhook 方式) / QQ Official Bot (Webhook)'
+        - 'OneBot v11 (原 QQ 个人号) / OneBot v11 (legacy QQ personal account)'
+        - '企微应用 / WeCom App'
+        - '企微智能机器人 / WeCom Smart Robot'
+        - '微信公众号 / WeChat Official Account'
+        - '个人微信 / Personal WeChat'
+        - '飞书 / Feishu (Lark)'
+        - '钉钉 / DingTalk'
         - 'Telegram'
         - 'LINE'
         - 'Slack'
         - 'Misskey'
         - 'Discord'
         - 'KOOK'
-        - 'Satori (接入 Satori)'
-        - 'Satori (使用 server-satori)'
-        - 'Matrix (社区提供)'
-        - 'VoceChat (社区提供)'
-        - '其他平台'
+        - 'Satori (接入 Satori) / Satori (via Satori)'
+        - 'Satori (使用 server-satori) / Satori (using server-satori)'
+        - 'Matrix (社区提供) / Matrix (community-provided)'
+        - 'VoceChat (社区提供) / VoceChat (community-provided)'
+        - '其他平台 / Other platform'
     validations:
       required: true
 
   - type: input
     attributes:
-      label: 其他平台名称（如选择“其他平台”请填写）
-      description: 如果你上面选择了“其他平台”，请在这里补充实际平台名称；否则可留空。
-      placeholder: '如: 全平台 / 自定义适配器 / 某社区平台'
+      label: 其他平台名称（如选择“其他平台”请填写）/ Other platform name (required if you selected "Other platform")
+      description: 如果你上面选择了“其他平台”，请在这里补充实际平台名称；否则可留空。/ If you selected "Other platform" above, please specify the actual platform name here; otherwise you can leave it blank.
+      placeholder: '如: 全平台 / 自定义适配器 / 某社区平台 / E.g.: all platforms / custom adapter / some community platform'
 
   - type: dropdown
     attributes:
-      label: 当前主要部署方式（可选）
-      description: 如果该建议与你的运行环境有关，请选择最接近的一项。
+      label: 当前主要部署方式（可选）/ Current primary deployment method (optional)
+      description: 如果该建议与你的运行环境有关，请选择最接近的一项。/ If the suggestion is related to your runtime environment, please select the closest option.
       options:
-        - 'uv 一键部署'
-        - 'Docker / Docker Compose 部署'
-        - 'RainYun 一键云部署'
-        - 'AstrBot App 桌面应用部署'
-        - 'AstrBot Launcher 部署'
-        - 'Replit 部署'
-        - 'AUR 部署'
-        - 'BT-Panel 部署'
-        - '1Panel 部署'
-        - 'CasaOS 部署'
-        - '手动部署（CLI / 源码 / uv）'
-        - '其他'
-        - '不确定'
+        - 'uv 一键部署 / uv one-click deployment'
+        - 'Docker / Docker Compose 部署 / Docker / Docker Compose deployment'
+        - 'RainYun 一键云部署 / RainYun one-click cloud deployment'
+        - 'AstrBot App 桌面应用部署 / AstrBot App desktop deployment'
+        - 'AstrBot Launcher 部署 / AstrBot Launcher deployment'
+        - 'Replit 部署 / Replit deployment'
+        - 'AUR 部署 / AUR deployment'
+        - 'BT-Panel 部署 / BT-Panel deployment'
+        - '1Panel 部署 / 1Panel deployment'
+        - 'CasaOS 部署 / CasaOS deployment'
+        - '手动部署（CLI / 源码 / uv）/ Manual deployment (CLI / source / uv)'
+        - '其他 / Other'
+        - '不确定 / Not sure'
 
   - type: textarea
     attributes:
-      label: 补充说明（可选）
+      label: 补充说明（可选）/ Additional notes (optional)
       description: >
         如该建议与 AstrBot 版本、插件版本、多个平台兼容性或特殊部署环境有关，请在这里补充。
+        / If the suggestion relates to AstrBot version, plugin version, multi-platform compatibility, or a special deployment environment, please add details here.
       placeholder: >
         如: 希望 Telegram、飞书和 QQ 官机表现一致；当前部署在 Docker；建议优先支持 XX 功能等。
+        / E.g.: Want consistent behavior on Telegram, Feishu, and QQ Official Bot; currently deployed on Docker; suggest prioritizing XX feature, etc.
 
   - type: checkboxes
     attributes:
-      label: 你愿意提交 PR 吗?
+      label: 你愿意提交 PR 吗? / Would you like to submit a PR?
       description: >
         这不是必须的，但我们欢迎您的贡献。
+        / This is not required, but we welcome your contribution.
       options:
-        - label: 是的, 我愿意提交PR!
+        - label: 是的, 我愿意提交PR! / Yes, I would like to submit a PR!
 
   - type: checkboxes
     attributes:
@@ -101,8 +108,9 @@ body:
       options:
         - label: >
             我已阅读并同意遵守该项目的 [行为准则](https://docs.github.com/zh/site-policy/github-terms/github-community-code-of-conduct)。
+            / I have read and agree to abide by the [Code of Conduct](https://docs.github.com/site-policy/github-terms/github-community-code-of-conduct) of this project.
           required: true
 
   - type: markdown
     attributes:
-      value: '感谢您填写我们的表单！'
+      value: '感谢您填写我们的表单！/ Thank you for filling out our form!'

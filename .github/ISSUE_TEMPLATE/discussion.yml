@@ -1,5 +1,5 @@
-name: '❓ 使用咨询 / 问题讨论'
-description: 提交咨询、排查思路或开放性讨论。
+name: '❓ 使用咨询 / 问题讨论 / Usage Q&A / Discussion'
+description: 提交咨询、排查思路或开放性讨论。/ Submit questions, troubleshooting ideas, or open discussions.
 title: '[Discussion] '
 labels: [ 'type/discussion' ]
 body:
@@ -8,120 +8,125 @@ body:
       value: |
         感谢您抽出时间发起讨论！如果您暂时不能确定这是否是插件 Bug，或者希望先进行使用咨询、兼容性排查、方案讨论，都可以使用该模板。
 
+        Thank you for starting a discussion! If you are not yet sure whether this is a plugin bug, or you want usage advice, compatibility troubleshooting, or solution discussion first, feel free to use this template.
+
   - type: textarea
     attributes:
-      label: 你想实现什么？
-      description: 请描述你的目标、预期效果，或你当前想确认的问题。
+      label: 你想实现什么？/ What do you want to achieve?
+      description: 请描述你的目标、预期效果，或你当前想确认的问题。/ Please describe your goal, expected outcome, or the question you want to confirm.
       placeholder: >
         如: 我希望插件在满足某个条件后自动发送消息，但当前不确定是配置问题、平台限制还是插件行为如此。
+        / E.g.: I want the plugin to automatically send a message after a condition is met, but I'm not sure whether it's a configuration issue, a platform limitation, or intended plugin behavior.
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 当前实际情况
-      description: 请描述你目前观察到的现象、输出结果或不符合预期的行为。
+      label: 当前实际情况 / Current actual situation
+      description: 请描述你目前观察到的现象、输出结果或不符合预期的行为。/ Please describe what you currently observe, the output, or behavior that doesn't match expectations.
       placeholder: >
         如: 插件已经加载成功，但没有按预期触发；后台没有明显报错，只能看到部分调试日志。
+        / E.g.: The plugin loaded successfully but didn't trigger as expected; no obvious errors in the backend, only some debug logs.
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 你已经尝试过哪些方法？
-      description: 请简要说明你已经做过的排查、对照或临时处理方式。
+      label: 你已经尝试过哪些方法？/ What have you already tried?
+      description: 请简要说明你已经做过的排查、对照或临时处理方式。/ Please briefly describe the troubleshooting, comparisons, or temporary workarounds you have already done.
       placeholder: >
         如: 已检查配置项、重启 AstrBot、切换适配器环境、提高日志等级、对照 README 重新配置。
+        / E.g.: Checked configuration items, restarted AstrBot, switched adapter environments, increased the log level, reconfigured per the README.
     validations:
       required: true
 
   - type: dropdown
     attributes:
-      label: 你目前对问题性质的判断
-      description: 这有助于我们更快判断后续应继续讨论、补文档，还是转为 Bug。
+      label: 你目前对问题性质的判断 / Your current assessment of the issue
+      description: 这有助于我们更快判断后续应继续讨论、补文档，还是转为 Bug。/ This helps us decide whether to continue the discussion, add documentation, or convert it into a bug.
       options:
-        - '不确定，想先确认是否为预期行为'
-        - '可能是插件 Bug，但还不能确定'
-        - '更像是配置、部署或适配器相关问题'
-        - '更像是使用方式或文档理解问题'
+        - '不确定，想先确认是否为预期行为 / Not sure, want to confirm if it is expected behavior'
+        - '可能是插件 Bug，但还不能确定 / Might be a plugin bug, but not yet confirmed'
+        - '更像是配置、部署或适配器相关问题 / More likely a configuration, deployment, or adapter issue'
+        - '更像是使用方式或文档理解问题 / More likely a usage or documentation understanding issue'
     validations:
       required: true
 
   - type: input
     attributes:
-      label: 插件版本
-      description: 请填写你当前使用的插件版本。
-      placeholder: '如: v1.2.0'
+      label: 插件版本 / Plugin version
+      description: 请填写你当前使用的插件版本。/ Please enter the plugin version you are currently using.
+      placeholder: '如: v1.2.0 / E.g.: v1.2.0'
     validations:
       required: true
 
   - type: input
     attributes:
-      label: AstrBot 版本
-      description: 请填写你当前使用的 AstrBot 版本。
-      placeholder: '如: v4.22.1'
+      label: AstrBot 版本 / AstrBot version
+      description: 请填写你当前使用的 AstrBot 版本。/ Please enter the AstrBot version you are currently using.
+      placeholder: '如: v4.22.1 / E.g.: v4.22.1'
     validations:
       required: true
 
   - type: dropdown
     attributes:
-      label: 部署方式
-      description: 请选择最接近的一项。
+      label: 部署方式 / Deployment method
+      description: 请选择最接近的一项。/ Please select the closest option.
       options:
-        - 'uv 一键部署'
-        - 'Docker / Docker Compose 部署'
-        - 'RainYun 一键云部署'
-        - 'AstrBot App 桌面应用部署'
-        - 'AstrBot Launcher 部署'
-        - 'Replit 部署'
-        - 'AUR 部署'
-        - 'BT-Panel 部署'
-        - '1Panel 部署'
-        - 'CasaOS 部署'
-        - '手动部署（CLI / 源码 / uv）'
-        - '其他'
-        - '不确定'
+        - 'uv 一键部署 / uv one-click deployment'
+        - 'Docker / Docker Compose 部署 / Docker / Docker Compose deployment'
+        - 'RainYun 一键云部署 / RainYun one-click cloud deployment'
+        - 'AstrBot App 桌面应用部署 / AstrBot App desktop deployment'
+        - 'AstrBot Launcher 部署 / AstrBot Launcher deployment'
+        - 'Replit 部署 / Replit deployment'
+        - 'AUR 部署 / AUR deployment'
+        - 'BT-Panel 部署 / BT-Panel deployment'
+        - '1Panel 部署 / 1Panel deployment'
+        - 'CasaOS 部署 / CasaOS deployment'
+        - '手动部署（CLI / 源码 / uv）/ Manual deployment (CLI / source / uv)'
+        - '其他 / Other'
+        - '不确定 / Not sure'
     validations:
       required: true
 
   - type: dropdown
     attributes:
-      label: 使用的消息平台适配器
-      description: 请选择你当前主要使用或排查的平台。如涉及多个平台，请先选最主要的一个，并在补充说明中写明其他平台。
+      label: 使用的消息平台适配器 / Message platform adapter
+      description: 请选择你当前主要使用或排查的平台。如涉及多个平台，请先选最主要的一个，并在补充说明中写明其他平台。/ Select the platform you mainly use or are troubleshooting. If multiple platforms are involved, choose the primary one first and list the others in the notes.
       options:
-        - 'QQ 官方机器人 (Websockets 方式)'
-        - 'QQ 官方机器人 (Webhook 方式)'
-        - 'OneBot v11 (原 QQ 个人号)'
-        - '企微应用'
-        - '企微智能机器人'
-        - '微信公众号'
-        - '个人微信'
-        - '飞书'
-        - '钉钉'
+        - 'QQ 官方机器人 (Websockets 方式) / QQ Official Bot (Websockets)'
+        - 'QQ 官方机器人 (Webhook 方式) / QQ Official Bot (Webhook)'
+        - 'OneBot v11 (原 QQ 个人号) / OneBot v11 (legacy QQ personal account)'
+        - '企微应用 / WeCom App'
+        - '企微智能机器人 / WeCom Smart Robot'
+        - '微信公众号 / WeChat Official Account'
+        - '个人微信 / Personal WeChat'
+        - '飞书 / Feishu (Lark)'
+        - '钉钉 / DingTalk'
         - 'Telegram'
         - 'LINE'
         - 'Slack'
         - 'Misskey'
         - 'Discord'
         - 'KOOK'
-        - 'Satori (接入 Satori)'
-        - 'Satori (使用 server-satori)'
-        - 'Matrix (社区提供)'
-        - 'VoceChat (社区提供)'
-        - '其他平台'
+        - 'Satori (接入 Satori) / Satori (via Satori)'
+        - 'Satori (使用 server-satori) / Satori (using server-satori)'
+        - 'Matrix (社区提供) / Matrix (community-provided)'
+        - 'VoceChat (社区提供) / VoceChat (community-provided)'
+        - '其他平台 / Other platform'
     validations:
       required: true
 
   - type: input
     attributes:
-      label: 其他平台名称（如选择“其他平台”请填写）
-      description: 如果你上面选择了“其他平台”，请在这里补充实际平台名称；否则可留空。
-      placeholder: '如: 某某社区适配器 / 自定义平台'
+      label: 其他平台名称（如选择“其他平台”请填写）/ Other platform name (required if you selected "Other platform")
+      description: 如果你上面选择了“其他平台”，请在这里补充实际平台名称；否则可留空。/ If you selected "Other platform" above, please specify the actual platform name here; otherwise you can leave it blank.
+      placeholder: '如: 某某社区适配器 / 自定义平台 / E.g.: some community adapter / custom platform'
 
   - type: dropdown
     attributes:
-      label: 操作系统
-      description: 你当前主要运行在什么操作系统上？
+      label: 操作系统 / Operating system
+      description: 你当前主要运行在什么操作系统上？/ Which operating system are you mainly running on?
       options:
         - 'Windows'
         - 'macOS'
@@ -133,24 +138,26 @@ body:
 
   - type: textarea
     attributes:
-      label: 补充说明（可选）
-      description: 如果涉及多个平台、多个 AstrBot 版本、特殊部署环境或自定义适配器，请在这里补充。
+      label: 补充说明（可选）/ Additional notes (optional)
+      description: 如果涉及多个平台、多个 AstrBot 版本、特殊部署环境或自定义适配器，请在这里补充。/ If this involves multiple platforms, multiple AstrBot versions, a special deployment environment, or a custom adapter, please add details here.
       placeholder: >
         如: 同样的问题在 Telegram 与 QQ 官机都可复现；使用反向代理；部署在 NAS / 云服务器等。
+        / E.g.: Reproducible on both Telegram and QQ Official Bot; using a reverse proxy; deployed on NAS / cloud server, etc.
 
   - type: textarea
     attributes:
-      label: 相关配置、日志或截图
-      description: 如相关配置片段、控制台输出、截图等。涉及隐私信息时请先脱敏。
+      label: 相关配置、日志或截图 / Relevant config, logs, or screenshots
+      description: 如相关配置片段、控制台输出、截图等。涉及隐私信息时请先脱敏。/ Such as relevant config snippets, console output, screenshots, etc. Please redact any private information first.
       placeholder: >
         请尽量提供能帮助定位问题的配置、日志或截图。
+        / Please provide configs, logs, or screenshots that can help locate the problem.
 
   - type: checkboxes
     attributes:
-      label: 你愿意在结论明确后提交 PR 或协助补充文档吗？
-      description: 这不是必需的，但如果你愿意参与后续修复或补充说明，会非常有帮助。
+      label: 你愿意在结论明确后提交 PR 或协助补充文档吗？/ Would you like to submit a PR or help with documentation once the conclusion is clear?
+      description: 这不是必需的，但如果你愿意参与后续修复或补充说明，会非常有帮助。/ This is not required, but it would be very helpful if you would like to participate in the follow-up fix or add notes.
       options:
-        - label: 是的，我愿意在问题明确后协助推进。
+        - label: 是的，我愿意在问题明确后协助推进。 / Yes, I would like to help once the issue is clarified.
 
   - type: checkboxes
     attributes:
@@ -158,8 +165,9 @@ body:
       options:
         - label: >
             我已阅读并同意遵守该项目的 [行为准则](https://docs.github.com/zh/site-policy/github-terms/github-community-code-of-conduct)。
+            / I have read and agree to abide by the [Code of Conduct](https://docs.github.com/site-policy/github-terms/github-community-code-of-conduct) of this project.
           required: true
 
   - type: markdown
     attributes:
-      value: '感谢您填写我们的表单！'
+      value: '感谢您填写我们的表单！/ Thank you for filling out our form!'

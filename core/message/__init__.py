@@ -10,6 +10,6 @@ from .message_manager import MessagePushManager
 
 __all__ = [
     "MessageLogger",
-    "get_message_logger",
     "MessagePushManager",
+    "get_message_logger",
 ]

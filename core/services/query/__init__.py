@@ -20,8 +20,8 @@ from .typhoon_query_service import (
 from .weather_query_service import query_weather_alarm_data
 
 __all__ = [
-    "EarthquakeListService",
     "EEWQueryStateService",
+    "EarthquakeListService",
     "SourceRuntimeQueryService",
     "TyphoonQueryItem",
     "TyphoonQueryResult",

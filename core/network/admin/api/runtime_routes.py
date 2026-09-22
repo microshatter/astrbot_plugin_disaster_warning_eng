@@ -8,9 +8,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import Request
-
 from astrbot.api import logger
+from fastapi import Request
 
 from .....utils.geolocation import fetch_location_from_ip
 from ....services.query.typhoon_query_service import (
@@ -151,5 +150,5 @@ def register_runtime_routes(app, disaster_service, config: dict[str, Any]):
         except Exception as e:
             logger.error(f"[灾害预警] IP地理定位失败: {e}")
             return ApiResponse.error(
-                f"获取地理位置失败: {str(e)}", status_code=500, success=False
+                f"获取地理位置失败: {e!s}", status_code=500, success=False
             )

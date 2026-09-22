@@ -90,15 +90,17 @@ class StatsRuleService:
                 if "正式" in info_type:
                     is_reliable = True
                     is_cenc_official = True
-                elif "reviewed" in info_lower:
-                    is_reliable = True
-                elif info_type in [
-                    "Destination",
-                    "ScaleAndDestination",
-                    "DetailScale",
-                ]:
-                    is_reliable = True
-                elif "震源" in info_type or "各地" in info_type:
+                elif (
+                    "reviewed" in info_lower
+                    or info_type
+                    in [
+                        "Destination",
+                        "ScaleAndDestination",
+                        "DetailScale",
+                    ]
+                    or "震源" in info_type
+                    or "各地" in info_type
+                ):
                     is_reliable = True
                 elif envelope.source_id == "fssn_cmt_fanstudio" and info_type == "CMT":
                     # CMT 虽是补充产品，但在 record_earthquake_stats 外层已被 is_earthquake_supplement_product 过滤掉。

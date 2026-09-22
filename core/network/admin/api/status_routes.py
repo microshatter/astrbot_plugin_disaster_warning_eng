@@ -95,7 +95,7 @@ def register_status_routes(
 
     @app.post("/api/statistics/reset")
     async def reset_statistics(payload: dict[str, Any] | None = None):
-        """清除统计数据（等价于 /灾害预警统计清除）。"""
+        """清除统计数据（等价于 /disaster_stats_clear）。"""
         try:
             guard_result = ApiResponse.guard_service_ready(
                 disaster_service,

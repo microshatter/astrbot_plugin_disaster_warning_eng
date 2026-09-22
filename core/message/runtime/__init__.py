@@ -16,10 +16,10 @@ from .resource_cleanup_service import MessageResourceCleanupService
 from .runtime_component_factory import MessageRuntimeComponentFactory
 
 __all__ = [
-    "MessageManagerBootstrapService",
     "BrowserManager",
     "FusionStateStore",
     "LocalMonitor",
+    "MessageManagerBootstrapService",
     "MessageRemoteMediaService",
     "MessageResourceCleanupService",
     "MessageRuntimeComponentFactory",

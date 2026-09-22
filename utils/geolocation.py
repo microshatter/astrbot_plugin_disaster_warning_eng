@@ -4,7 +4,6 @@ IP地理定位工具
 """
 
 import aiohttp
-
 from astrbot.api import logger
 
 # 模块级共享会话，防止高频查询时重复创建和销毁 session 对象从而耗尽系统文件句柄
@@ -90,9 +89,9 @@ async def fetch_location_from_ip(
             return result
 
     except aiohttp.ClientError as e:
-        error_msg = f"网络请求失败: {str(e)}"
+        error_msg = f"网络请求失败: {e!s}"
         logger.error(f"[灾害预警] {error_msg}")
         raise Exception(error_msg)
     except Exception as e:
-        logger.error(f"[灾害预警] 获取位置信息失败: {str(e)}")
+        logger.error(f"[灾害预警] 获取位置信息失败: {e!s}")
         raise

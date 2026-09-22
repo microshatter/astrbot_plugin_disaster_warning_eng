@@ -12,9 +12,8 @@ import tempfile
 import time
 
 import aiohttp
-from playwright.async_api import Browser, Page, async_playwright
-
 from astrbot.api import logger
+from playwright.async_api import Browser, Page, async_playwright
 
 from ....core.services.telemetry.telemetry_utils import track_error_safely
 from ....utils.plugin_logger import plugin_logger

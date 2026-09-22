@@ -36,7 +36,10 @@ __all__ = [
     "normalize_emoji_filter_mode",
     "close_geoip_session",
     "fetch_location_from_ip",
+    "get_astrbot_version",
+    "get_astrbot_version_info",
     "get_geoip_session",
+    "get_plugin_version",
     "get_tile_url",
     "get_tile_url_js",
     "normalize_map_source",
@@ -47,7 +50,4 @@ __all__ = [
     "rank_level_emoji",
     "typhoon_level_emoji",
     "TimeConverter",
-    "get_astrbot_version",
-    "get_astrbot_version_info",
-    "get_plugin_version",
 ]

@@ -6,7 +6,7 @@ const isWeatherImageInvalid = _rawInvalidCheck || ((el) => Boolean(el) && el.nat
 
 /**
  * 气象预警快捷查询面板组件 (WeatherQueryPanel)
- * 提供与聊天机器人命令 `/气象预警查询` 完全一致的可视化检索配置界面。
+ * 提供与聊天机器人命令 `/weather_alarm` 完全一致的可视化检索配置界面。
  * 输入流程包含：
  * 1. 关键字（当输入合规的预警 ID 时，组件自动进入详情模式渲染，若输入地区名称如“北京”则自动进入近72小时检索列表模式）。
  * 2. 预警气象类型过滤输入框。
@@ -59,8 +59,8 @@ function WeatherQueryPanel() {
                         {bodyText}
                     </Typography>
                     {guidelineText && (
-                        <Typography 
-                            variant="body2" 
+                        <Typography
+                            variant="body2"
                             className="weather-query-result-text weather-query-result-text--guideline"
                         >
                             {guidelineText}
@@ -132,8 +132,8 @@ function WeatherQueryPanel() {
 
                 {/* 循环遍历渲染单页预警项 */}
                 {pagedItems.map((item, index) => (
-                    <div 
-                        className="weather-query-list-item" 
+                    <div
+                        className="weather-query-list-item"
                         key={`${item.alarm_id || 'unknown'}-${startIndex + index}`}
                     >
                         {/* 左侧：预警信号代表图标 */}
@@ -204,7 +204,7 @@ function WeatherQueryPanel() {
                     <Typography variant="h6" className="weather-query-title">气象预警快捷查询</Typography>
                 </div>
                 <Typography variant="caption" className="weather-query-caption-subtle">
-                    等价于 /气象预警查询 指令
+                    等价于 /weather_alarm 指令
                 </Typography>
             </div>
 
@@ -257,9 +257,9 @@ function WeatherQueryPanel() {
                 <button className="btn weather-query-btn" onClick={searchWeather} disabled={loading}>
                     {loading ? '查询中...' : '查询'}
                 </button>
-                <button 
-                    className="btn weather-query-btn weather-query-btn-secondary" 
-                    onClick={resetWeatherQuery} 
+                <button
+                    className="btn weather-query-btn weather-query-btn-secondary"
+                    onClick={resetWeatherQuery}
                     disabled={loading}
                 >
                     清空

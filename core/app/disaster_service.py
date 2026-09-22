@@ -793,7 +793,7 @@ class DisasterWarningService:
         )
 
     def get_eew_query_text(self) -> str:
-        """生成 /地震预警查询 命令对应的文本。"""
+        """生成 /earthquake_warning 命令对应的文本。"""
         return self.notice_service.get_eew_query_text()
 
 
