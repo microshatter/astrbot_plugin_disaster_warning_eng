@@ -7,6 +7,7 @@ from .base_rule import BaseRule, RuleContext
 from .intensity_rule import EarthquakeThresholdRule
 from .keyword_rule import KeywordRule
 from .local_rule import LocalIntensityRule
+from .measurement_rule import MeasurementTypeRule
 from .report_rule import ReportRule
 from .rule_chain import RuleChain, build_default_rule_chain
 from .rule_result import RuleDecision
@@ -21,6 +22,9 @@ __all__ = [
     "EarthquakeThresholdRule",
     "EventTimeRule",
     "KeywordRule",
+    "EarthquakeThresholdRule",
+    "MeasurementTypeRule",
+    "ReportRule",
     "LocalIntensityRule",
     "ReportRule",
     "RuleChain",
