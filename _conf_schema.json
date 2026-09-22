@@ -58,11 +58,6 @@
             "default": "主服务器优先",
             "hint": "主服务器优先：始终优先连接主服务器；备用服务器优先：始终优先连接备用服务器；自动：主断后自动切备，重连时优先回主"
           },
-          "fanapi": {
-            "description": "FAN Studio API 密钥",
-            "type": "string",
-            "default": ""
-          },
           "china_earthquake_warning": {
             "description": "中国地震网地震预警",
             "type": "bool",
