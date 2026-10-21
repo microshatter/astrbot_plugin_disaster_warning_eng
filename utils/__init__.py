@@ -14,7 +14,16 @@ from .emoji_filter import (
     normalize_emoji_filter_mode,
 )
 from .geolocation import close_geoip_session, fetch_location_from_ip, get_geoip_session
-from .map_tile_sources import get_tile_url, get_tile_url_js, normalize_map_source
+from .map_tile_sources import (
+    build_proxy_bypass_list_arg,
+    get_tile_bypass_domains,
+    get_tile_subdomains,
+    get_tile_url,
+    get_tile_url_js,
+    merge_no_proxy_into_env,
+    normalize_map_source,
+    normalize_proxy_bypass_domains,
+)
 from .severity_emoji import (
     SEVERITY_INDICATOR_EMOJIS,
     aqi_level_emoji,
@@ -38,11 +47,16 @@ __all__ = [
     "fetch_location_from_ip",
     "get_astrbot_version",
     "get_astrbot_version_info",
+    "build_proxy_bypass_list_arg",
     "get_geoip_session",
     "get_plugin_version",
+    "get_tile_bypass_domains",
+    "get_tile_subdomains",
     "get_tile_url",
     "get_tile_url_js",
+    "merge_no_proxy_into_env",
     "normalize_map_source",
+    "normalize_proxy_bypass_domains",
     "SEVERITY_INDICATOR_EMOJIS",
     "aqi_level_emoji",
     "cn_tsunami_level_emoji",
