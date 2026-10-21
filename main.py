@@ -228,16 +228,16 @@ class DisasterWarningPlugin(Star):
             # 2. 地震专业分析
             (
                 "🔬 地震专业分析\n"
-                "• /地震动预测 <纬度> <经度> <震级> <深度> <预测点纬度> <预测点经度> [Vs30]\n"
+                "• /ground_motion_predict <纬度> <经度> <震级> <深度> <预测点纬度> <预测点经度> [Vs30]\n"
                 "   可引用地震消息自动提取震中参数；Vs30 可选（缺省 600 m/s）\n"
-                "• /本地地震动预测 [纬度] [经度]（别名 /本地预测 /卧槽）\n"
+                "• /local_ground_motion_predict [纬度] [经度]（别名 /本地地震动预测 /本地预测 /卧槽）\n"
                 "   引用地震消息按本地监控坐标预测\n"
-                "• /JMA震央分布 [开始日期] [结束日期]\n"
-                "• /JMA震央分布绘图 [投影] [开始日期] [结束日期]\n"
+                "• /jma_hypo_list [开始日期] [结束日期]（别名 /JMA震央分布）\n"
+                "• /jma_hypo_plot [投影] [开始日期] [结束日期]（别名 /JMA震央分布绘图）\n"
                 "   投影：经度纬度/经度深度/纬度深度/经度时间/纬度时间/深度时间\n"
                 "• /snet - NIED 海底震度分布\n"
-                "• /生成沙滩球 <走向> <倾角> <滑动角> [大小] [线宽]\n"
-                "• /节面解析 <走向> <倾角> <滑动角>"
+                "• /beachball <走向> <倾角> <滑动角> [大小] [线宽]（别名 /生成沙滩球 /沙滩球）\n"
+                "• /nodal_plane <走向> <倾角> <滑动角>（别名 /节面解析）"
             ),
             # 3. 气象预警与雷达
             (
@@ -245,45 +245,45 @@ class DisasterWarningPlugin(Star):
                 "• /weather_alarm <省份|全国> [类型] [颜色] [全部|全日期]（别名 /气象预警查询 /气象预警）\n"
                 "   或 /weather_alarm <预警ID>\n"
                 "   默认近 72 小时，全部/全日期查全量历史\n"
-                "• /雷达 <站点名>（如 /雷达 北京、/雷达 全国）\n"
-                "• /雷达动图 <站点名>\n"
-                "• /雷达列表"
+                "• /radar <站点名>（如 /radar 北京、/radar 全国；别名 /雷达）\n"
+                "• /radar_gif <站点名>（别名 /雷达动图）\n"
+                "• /radar_list（别名 /雷达列表）"
             ),
             # 4. 降水量预报
             (
                 "🌧️ 降水量预报\n"
-                "• /降水量预报 [24h|6h] [时次]\n"
-                "   例：/降水量预报 24h、/降水量预报 6h 08时\n"
-                "• /降水量预报动图 [24h|6h]\n"
+                "• /precipitation [24h|6h] [时次]（别名 /降水量预报）\n"
+                "   例：/precipitation 24h、/precipitation 6h 08时\n"
+                "• /precipitation_gif [24h|6h]（别名 /降水量预报动图）\n"
                 "   全时次循环动图"
             ),
             # 5. 实况排行
             (
                 "📊 实况排行（全国 Top10）\n"
-                "• /气温排行 [跨度] [时次]\n"
-                "• /最低气温排行 [跨度] [时次]\n"
-                "• /降水排行 [跨度] [时次]\n"
-                "• /风速排行 [跨度] [时次]\n"
+                "• /temperature_rank [跨度] [时次]（别名 /气温排行）\n"
+                "• /mintemperature_rank [跨度] [时次]（别名 /最低气温排行）\n"
+                "• /rain_rank [跨度] [时次]（别名 /降水排行）\n"
+                "• /wind_rank [跨度] [时次]（别名 /风速排行）\n"
                 "   跨度：6小时/24小时；时次：MM月DD日HH时 等\n"
-                "   例：/降水排行 6小时 昨天20时"
+                "   例：/rain_rank 6小时 昨天20时"
             ),
             # 6. 气象站与空气质量
             (
                 "🏙️ 气象站与空气质量\n"
-                "• /气象站实况 <站点代码|站名>（别名 /实况 /气象站）\n"
-                "• /气象站历史 <站点> [时次]\n"
-                "• /气象站列表 [省份]\n"
-                "• /空气质量 <城市|省份|全国> [等级]（别名 /AQI）\n"
-                "• /空气质量排行 [最好|最差]\n"
-                "• /空气质量列表 [省份]"
+                "• /weather_station_real <站点代码|站名>（别名 /气象站实况 /实况 /气象站）\n"
+                "• /weather_station_history <站点> [时次]（别名 /气象站历史）\n"
+                "• /weather_station_list [省份]（别名 /气象站列表）\n"
+                "• /aqi <城市|省份|全国> [等级]（别名 /空气质量 /AQI）\n"
+                "• /aqi_rank [最好|最差]（别名 /空气质量排行）\n"
+                "• /aqi_list [省份]（别名 /空气质量列表）"
             ),
             # 7. 台风信息
             (
-                "🌀 台风信息查询（别名 /台风查询 /台风信息）\n"
+                "🌀 台风信息（别名 /台风信息查询 /台风查询 /台风信息）\n"
                 "参数任意顺序：台风ID | 名称 | 数量 | 完整|简要 | 活跃\n"
-                "• /台风信息查询 - 活跃台风列表\n"
-                "• /台风信息查询 2609 完整 - 指定台风完整路径\n"
-                "• /台风信息查询 5 活跃 - 最近 5 个活跃台风"
+                "• /typhoon - 活跃台风列表\n"
+                "• /typhoon 2609 完整 - 指定台风完整路径\n"
+                "• /typhoon 5 活跃 - 最近 5 个活跃台风"
             ),
             # 8. 模拟预警
             (
@@ -297,16 +297,17 @@ class DisasterWarningPlugin(Star):
             # 9. 运维管理
             (
                 "🛠️ 运维管理\n"
-                "• /disaster_status - 服务运行状态\n"
-                "• /灾害预警重启 - 重载插件\n"
-                "• /灾害预警重连 - 强制重连离线数据源\n"
-                "• /灾害预警统计 / 灾害预警统计清除\n"
-                "• /灾害预警推送开关 - 会话推送开关\n"
-                "• /灾害预警配置 查看 [全局|当前|<会话UMO>]\n"
-                "• /设置所在地 [纬度] [经度] [地名] [范围]\n"
-                "• /灾害预警日志 / 日志导出 [数量] / 日志开关 / 日志清除\n"
-                "• /服务器切换 - 查看/切换数据源主备服务器\n"
-                "• /重启AstrBot - 重启整个 AstrBot 进程\n"
+                "• /disaster_status - 服务运行状态（别名 /灾害预警状态）\n"
+                "• /disaster_restart - 重载插件（别名 /灾害预警重启 /灾害预警重载）\n"
+                "• /disaster_reconnect - 强制重连离线数据源（别名 /灾害预警重连）\n"
+                "• /disaster_stats / disaster_stats_clear（别名 /灾害预警统计 /灾害预警统计清除）\n"
+                "• /disaster_push_toggle - 会话推送开关（别名 /灾害预警推送开关）\n"
+                "• /disaster_config 查看 [全局|当前|<会话UMO>]（别名 /灾害预警配置）\n"
+                "• /set_location [纬度] [经度] [地名] [范围]（别名 /设置所在地）\n"
+                "• /disaster_logs / disaster_log_export [数量] / disaster_log_toggle / disaster_log_clear\n"
+                "   别名 /灾害预警日志 / 日志导出 / 灾害预警日志开关 / 灾害预警日志清除\n"
+                "• /server_switch - 查看/切换数据源主备服务器（别名 /服务器切换）\n"
+                "• /restart_astrbot - 重启整个 AstrBot 进程（别名 /重启AstrBot）\n"
                 "──────────────\n"
                 "📚 更多信息请查阅插件 README 文档"
             ),
@@ -350,7 +351,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("地震动预测", alias={"地震动"})
+    @filter.command("ground_motion_predict", alias={"地震动预测", "地震动"})
     async def ground_motion_predict(
         self,
         event: AstrMessageEvent,
@@ -376,8 +377,8 @@ class DisasterWarningPlugin(Star):
             yield result
 
     @filter.command(
-        "本地地震动预测",
-        alias={"本地预测", "卧槽", "卧槽大大大", "本地地震动"},
+        "local_ground_motion_predict",
+        alias={"本地地震动预测", "本地地震动", "本地预测", "卧槽", "卧槽大大大"},
     )
     async def local_ground_motion_predict(
         self,
@@ -394,8 +395,9 @@ class DisasterWarningPlugin(Star):
             yield result
 
     @filter.command(
-        "JMA震央分布",
+        "jma_hypo_list",
         alias={
+            "JMA震央分布",
             "JMA震中分布",
             "JMA震源分布",
             "jma震央分布",
@@ -418,8 +420,9 @@ class DisasterWarningPlugin(Star):
             yield result
 
     @filter.command(
-        "JMA震央分布绘图",
+        "jma_hypo_plot",
         alias={
+            "JMA震央分布绘图",
             "JMA震中分布绘图",
             "JMA震源分布绘图",
             "jma震央分布绘图",
@@ -452,7 +455,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("生成沙滩球", alias={"沙滩球", "beachball", "球"})
+    @filter.command("beachball", alias={"生成沙滩球", "沙滩球", "球"})
     async def generate_beachball(
         self,
         event: AstrMessageEvent,
@@ -473,7 +476,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("节面解析", alias={"节面成分解析"})
+    @filter.command("nodal_plane", alias={"节面解析", "节面成分解析"})
     async def parse_nodal_plane(
         self,
         event: AstrMessageEvent,
@@ -494,7 +497,7 @@ class DisasterWarningPlugin(Star):
     # 3. 气象类指令
     # ======================================================================
 
-    @filter.command("雷达")
+    @filter.command("radar", alias={"雷达"})
     async def radar_image(self, event: AstrMessageEvent, name: str = None):
         """查询最新一帧气象雷达图"""
         async for result in self._query_command_service.handle_query_radar(
@@ -502,7 +505,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("雷达动图")
+    @filter.command("radar_gif", alias={"雷达动图"})
     async def radar_gif(self, event: AstrMessageEvent, name: str = None):
         """查询最近多帧合成循环动图"""
         async for result in self._query_command_service.handle_query_radar_gif(
@@ -510,13 +513,15 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("雷达列表")
+    @filter.command("radar_list", alias={"雷达列表"})
     async def radar_list(self, event: AstrMessageEvent):
         """查看全部气象雷达站点列表"""
         async for result in self._query_command_service.handle_query_radar_list(event):
             yield result
 
-    @filter.command("降水量预报", alias={"降水量预报图", "降水预报图", "降水预报"})
+    @filter.command(
+        "precipitation", alias={"降水量预报", "降水量预报图", "降水预报图", "降水预报"}
+    )
     async def precipitation_image(
         self,
         event: AstrMessageEvent,
@@ -531,7 +536,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("降水量预报动图", alias={"降水预报动图"})
+    @filter.command("precipitation_gif", alias={"降水量预报动图", "降水预报动图"})
     async def precipitation_gif(
         self,
         event: AstrMessageEvent,
@@ -544,7 +549,9 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("气温排行", alias={"温度排行", "气温榜", "温度榜"})
+    @filter.command(
+        "temperature_rank", alias={"气温排行", "温度排行", "气温榜", "温度榜"}
+    )
     async def temperature_rank(self, event: AstrMessageEvent, time_arg: str = None):
         """查询全国实况气温排行 Top10"""
         async for result in self._query_command_service.handle_query_rank(
@@ -553,8 +560,8 @@ class DisasterWarningPlugin(Star):
             yield result
 
     @filter.command(
-        "最低气温排行",
-        alias={"最低温排行", "最低气温榜", "低温排行", "低温榜"},
+        "mintemperature_rank",
+        alias={"最低气温排行", "最低温排行", "最低气温榜", "低温排行", "低温榜"},
     )
     async def mintemperature_rank(self, event: AstrMessageEvent, time_arg: str = None):
         """查询全国实况最低气温排行 Top10"""
@@ -563,7 +570,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("降水排行", alias={"降水榜", "降水量排行", "降水量榜"})
+    @filter.command("rain_rank", alias={"降水排行", "降水榜", "降水量排行", "降水量榜"})
     async def rain_rank(self, event: AstrMessageEvent, time_arg: str = None):
         """查询全国实况降水排行 Top10"""
         async for result in self._query_command_service.handle_query_rank(
@@ -571,7 +578,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("风速排行", alias={"风速榜", "风速排行榜"})
+    @filter.command("wind_rank", alias={"风速排行", "风速榜", "风速排行榜"})
     async def wind_rank(self, event: AstrMessageEvent, time_arg: str = None):
         """查询全国实况风速排行 Top10"""
         async for result in self._query_command_service.handle_query_rank(
@@ -579,7 +586,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("气象站实况", alias={"实况", "气象站"})
+    @filter.command("weather_station_real", alias={"气象站实况", "实况", "气象站"})
     async def query_weather_station_real(
         self,
         event: AstrMessageEvent,
@@ -591,7 +598,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("气象站历史", alias={"实况历史"})
+    @filter.command("weather_station_history", alias={"气象站历史", "实况历史"})
     async def query_weather_station_history(
         self,
         event: AstrMessageEvent,
@@ -604,7 +611,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("气象站列表")
+    @filter.command("weather_station_list", alias={"气象站列表"})
     async def query_weather_station_list(
         self,
         event: AstrMessageEvent,
@@ -618,7 +625,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("空气质量", alias={"AQI", "aqi", "空气质量指数"})
+    @filter.command("aqi", alias={"空气质量", "AQI", "空气质量指数"})
     async def query_aqi(
         self,
         event: AstrMessageEvent,
@@ -632,7 +639,8 @@ class DisasterWarningPlugin(Star):
             yield result
 
     @filter.command(
-        "空气质量排行", alias={"AQI排行", "aqi排行", "空气质量排行榜", "空气榜"}
+        "aqi_rank",
+        alias={"空气质量排行", "AQI排行", "aqi排行", "空气质量排行榜", "空气榜"},
     )
     async def query_aqi_rank(
         self,
@@ -645,7 +653,9 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("空气质量列表", alias={"AQI列表", "aqi列表", "空气质量城市列表"})
+    @filter.command(
+        "aqi_list", alias={"空气质量列表", "AQI列表", "aqi列表", "空气质量城市列表"}
+    )
     async def query_aqi_city_list(
         self,
         event: AstrMessageEvent,
@@ -661,7 +671,7 @@ class DisasterWarningPlugin(Star):
     # 4. 台风类指令
     # ======================================================================
 
-    @filter.command("台风信息查询", alias={"台风查询", "台风信息"})
+    @filter.command("typhoon", alias={"台风信息查询", "台风查询", "台风信息"})
     async def query_typhoon_info(
         self,
         event: AstrMessageEvent,
@@ -682,15 +692,16 @@ class DisasterWarningPlugin(Star):
     # 6. 运维管理指令（仅管理员）
     # ======================================================================
 
-    @filter.command("灾害预警重启", alias={"灾害预警重载"})
+    @filter.command("disaster_restart", alias={"灾害预警重启", "灾害预警重载"})
     async def disaster_restart(self, event: AstrMessageEvent):
         """重载插件（等价于 AstrBot WebUI 中的重载插件操作）"""
         async for result in self._admin_command_service.handle_disaster_restart(event):
             yield result
 
     @filter.command(
-        "重启AstrBot",
+        "restart_astrbot",
         alias={
+            "重启AstrBot",
             "重启 AstrBot",
             "重启astrbot",
             "重启 astrbot",
@@ -772,7 +783,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("设置所在地")
+    @filter.command("set_location", alias={"设置所在地"})
     async def set_location(
         self,
         event: AstrMessageEvent,
@@ -791,7 +802,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("灾害预警日志导出", alias={"日志导出"})
+    @filter.command("disaster_log_export", alias={"灾害预警日志导出", "日志导出"})
     async def disaster_log_export(self, event: AstrMessageEvent, count: str = None):
         """导出最近运行日志（脱敏）并上传生成链接"""
         async for result in self._admin_command_service.handle_disaster_log_export(
@@ -799,7 +810,7 @@ class DisasterWarningPlugin(Star):
         ):
             yield result
 
-    @filter.command("服务器切换")
+    @filter.command("server_switch", alias={"服务器切换"})
     async def server_switch(
         self, event: AstrMessageEvent, data_source: str = None, preference: str = None
     ):
@@ -872,6 +883,7 @@ class DisasterWarningPlugin(Star):
             source=source,
         ):
             yield result
+
     @filter.on_astrbot_loaded()
     async def on_astrbot_loaded(self):
         """AstrBot加载完成时的钩子"""
